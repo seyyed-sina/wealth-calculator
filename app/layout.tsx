@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
@@ -35,6 +36,7 @@ export default function RootLayout({
     <html lang="fa" dir="rtl">
       <body className={`${sahel.className} antialiased`}>
         <MainLayout>{children}</MainLayout>
+        <Analytics />
       </body>
     </html>
   );
