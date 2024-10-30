@@ -1,0 +1,8 @@
+.inputbox {
+  @apply border-2 border-solid border-gray-200 outline-0 focus:border-primary-500 focus-within:border-primary-500 font-normal text-sm px-3 py-2 rounded-lg min-h-10 transition-colors;
+
+  &:focus,
+  &:focus-within {
+    @apply outline-0;
+  }
+}

@@ -20,15 +20,14 @@
       }
     ],
     "paths": {
-      "@/lib/*": ["./src/lib/*"],
+      // "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
-      "@/features/*": ["./src/components/features/*"],
+      "@/features/*": ["src/components/feature/*"],
       "@components": ["./src/container/components.ts"],
       "@constants": ["./src/container/constants.ts"],
       "@types": ["./src/container/types.ts"],
-      "@hooks": ["./src/container/hooks.ts"],
       "@utils": ["./src/container/utils.ts"],
-      "@adapter": ["./src/services/adapter.ts"],
+      "@hooks": ["./src/container/hooks.ts"],
       "@/styles/*": ["./src/styles/*"]
     }
   },
