@@ -16,8 +16,8 @@ export const AssetFieldRow = memo(
     const { register } = useFormContext();
 
     return (
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 flex-1">
+      <div className="flex items-center flex-wrap gap-3">
+        <div className="flex items-center flex-wrap gap-2 flex-1">
           <input
             {...register(`assets.${index}.name`)}
             type="text"

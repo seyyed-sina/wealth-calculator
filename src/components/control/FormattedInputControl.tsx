@@ -25,7 +25,7 @@ export const FormattedInputControl = memo(
               type="text"
               {...rest}
               className={clx(
-                'flex-1 bg-transparent px-3 outline-0',
+                'flex-1 bg-transparent px-3 outline-0 shrink-0',
                 rest.inputClassName,
               )}
               inputMode="numeric"

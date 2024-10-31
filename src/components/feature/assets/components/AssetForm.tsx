@@ -1,14 +1,24 @@
 'use client';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 
-import { AssetFieldRow, Button, LucidIcon } from '@components';
+import { AssetFieldRow, AssetTotal, Button, LucidIcon } from '@components';
+import { useStore } from '@hooks';
 
 import { AssetFormValues } from '../assets.types';
 
 export const AssetForm = () => {
-  const formMethods = useForm<AssetFormValues>();
+  const formMethods = useForm<AssetFormValues>({
+    defaultValues: {
+      assets: [],
+    },
+  });
   const { handleSubmit, control } = formMethods;
 
   const { fields, append, remove } = useFieldArray<AssetFormValues>({
@@ -16,16 +26,31 @@ export const AssetForm = () => {
     name: 'assets',
   });
 
-  const handleAppend = useCallback(() => {
-    append({ title: '', value: '' });
-  }, [append]);
-
-  const handleRemove = useCallback(
-    (index: number) => {
-      remove(index);
-    },
-    [remove],
+  const handleAppend = useCallback(
+    () => append({ title: '', value: '' }),
+    [append],
   );
+
+  const handleRemove = useCallback((index: number) => remove(index), [remove]);
+
+  const setTotalAssets = useStore((state) => state.setTotalAssets);
+
+  const formValues = useWatch({
+    control,
+    name: 'assets',
+  });
+
+  const total = useMemo(
+    () =>
+      formValues.reduce(
+        (acc, { value }) => acc + Number(value.replace(/,/g, '') || 0),
+        0,
+      ),
+    [formValues],
+  );
+  console.log('total asset:: ', total);
+
+  setTotalAssets(total);
 
   return (
     <FormProvider {...formMethods}>
@@ -39,7 +64,8 @@ export const AssetForm = () => {
               onRemove={() => handleRemove(index)}
             />
           ))}
-          {fields?.length === 0 && (
+          {total > 0 && <AssetTotal total={total} />}
+          {fields.length === 0 && (
             <Button
               variant="empty"
               className="bg-green text-white px-4 gap-2"

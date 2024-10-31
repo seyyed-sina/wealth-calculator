@@ -64,7 +64,6 @@ export const convertPersianToEnglishNumbers = (input: string): string => {
 /**
  * Formats a given number string with commas and appends a currency unit.
  * @param {string} value - Required. The number string to format.
- * @param {string} currencyUnit - Optional. The currency unit to append to the formatted string.
  * @returns {string} The formatted string with commas and the currency unit.
  */
 export const formatNumberWithCommas = (value: string): string => {

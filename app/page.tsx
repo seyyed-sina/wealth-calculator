@@ -1,4 +1,4 @@
-import { Assets, Expenses } from '@components';
+import { Assets, Calculation, Expenses } from '@components';
 
 export default function Home() {
   return (
@@ -6,6 +6,7 @@ export default function Home() {
       <div className="container py-8 flex flex-col gap-10">
         <Assets />
         <Expenses />
+        <Calculation />
       </div>
     </section>
   );
