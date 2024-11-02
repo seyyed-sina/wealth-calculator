@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl">
-      <body className={`${sahel.className} antialiased`}>
+      <body className={`${sahel.className} antialiased text-gray-600`}>
         <MainLayout>{children}</MainLayout>
         <Analytics />
       </body>
