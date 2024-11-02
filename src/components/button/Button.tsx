@@ -15,6 +15,8 @@ export const buttonVariants = cva({
       secondary: 'bg-secondary text-white hover:bg-secondary-500',
       green: 'bg-green text-white hover:bg-green-500',
       red: 'bg-red text-white hover:bg-red-500',
+      'border-primary':
+        'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-white',
     },
     size: {
       small: 'text-sm py-1 px-3 h-10',

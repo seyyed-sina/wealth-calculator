@@ -3,61 +3,68 @@ import { memo } from 'react';
 
 import { useFormContext } from 'react-hook-form';
 
-import { Button, FormattedInputControl, LucidIcon } from '@components';
+import {
+  Button,
+  FormattedInputControl,
+  FormField,
+  FormValidation,
+  LucidIcon,
+} from '@components';
+import { getPlaceholderByIndex } from '@utils';
+
+import { FormValues } from '../../form/form.type';
+import { expensesPlaceholders } from '../expenses.data';
 
 interface ExpenseFieldRowProps {
   index: number;
-  onAdd: () => void;
   onRemove?: () => void;
 }
 
 export const ExpenseFieldRow = memo(
-  ({ onAdd, onRemove, index }: ExpenseFieldRowProps) => {
-    const { register } = useFormContext();
+  ({ onRemove, index }: ExpenseFieldRowProps) => {
+    const {
+      register,
+      formState: { errors },
+    } = useFormContext<FormValues>();
 
     return (
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 flex-1">
-          <input
-            {...register(`expenses.${index}.name`)}
-            type="text"
-            placeholder="عنوان هزینه"
-            className="flex-1 inputbox"
-          />{' '}
-          <FormattedInputControl
-            name={`expenses.${index}.value`}
-            className="flex-1 inputbox"
-            currencyUnit="تومان"
-            aria-placeholder="مقدار هزینه"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            type="submit"
-            size="small"
-            variant="green"
-            className="gap-2"
-            aria-label="Add new expense"
-            onClick={onAdd}>
-            <LucidIcon
-              name="plus"
-              strokeWidth={2}
-              className="size-5 shrink-0"
+      <div className="flex items-end flex-wrap gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 grow">
+          <FormField label="عنوان هزینه" inputId={`expenses.${index}.title`}>
+            <input
+              {...register(`expenses.${index}.title`)}
+              type="text"
+              id={`expenses.${index}.title`}
+              placeholder={getPlaceholderByIndex(expensesPlaceholders, index)}
+              className="inputbox w-full"
             />
-            اضافه کردن
-          </Button>
-          {onRemove && (
-            <Button
-              variant="red"
-              size="small"
-              className="gap-2"
-              aria-label="Remove expense"
-              onClick={onRemove}>
-              <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
-              حذف کردن
-            </Button>
-          )}
+          </FormField>
+          <FormField label="مقدار" inputId={`expenses.${index}.value`}>
+            <FormattedInputControl
+              name={`expenses.${index}.value`}
+              id={`expenses.${index}.value`}
+              className="w-full inputbox"
+              currencyUnit="تومان"
+              aria-placeholder="مقدار هزینه"
+            />
+            {errors?.expenses?.[index]?.value?.message && (
+              <FormValidation
+                error={errors?.expenses?.[index]?.value?.message}
+              />
+            )}
+          </FormField>
         </div>
+        {onRemove && (
+          <Button
+            variant="red"
+            size="small"
+            className="gap-2"
+            aria-label="Remove expense"
+            onClick={onRemove}>
+            <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
+            حذف کردن
+          </Button>
+        )}
       </div>
     );
   },

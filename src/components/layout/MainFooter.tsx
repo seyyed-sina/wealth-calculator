@@ -10,6 +10,15 @@ export const MainFooter = () => {
           Seyed Sina
         </a>
       </div>
+
+      <div className="container text-center text-xs flex justify-center items-center gap-1">
+        <a
+          href="https://github.com/sinasesayed/expense-tracker"
+          target="_blank"
+          rel="noreferrer">
+          GitHub
+        </a>
+      </div>
     </footer>
   );
 };

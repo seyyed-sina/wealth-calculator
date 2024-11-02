@@ -1,6 +1,11 @@
+import scrollbar from 'tailwind-scrollbar';
 import type { Config } from "tailwindcss";
 
 import { colorValue } from "./src/constants/colorValue";
+
+const scrollbarPlugin = scrollbar({
+  nocompatible: true,
+});
 
 const config: Config = {
   content: [
@@ -26,6 +31,6 @@ const config: Config = {
       colors: colorValue,
     },
   },
-  plugins: [],
+  plugins: [scrollbarPlugin],
 };
 export default config;

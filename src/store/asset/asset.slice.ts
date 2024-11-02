@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand';
 import { Asset, AssetState } from './asset.type';
 
 const initialState: AssetState = {
-  assets: [{ title: '', value: '' }],
+  assets: [],
   totalAssets: 0,
 };
 

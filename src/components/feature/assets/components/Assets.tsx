@@ -1,11 +1,10 @@
-import { AssetForm } from '@components';
+import { AssetForm, StepSection } from '@components';
 
 export const Assets = () => {
   return (
-    <section>
-      <h2 className="text-xl font-medium mb-6">درآمد ها (دارایی ها)</h2>
+    <StepSection title="دارایی ها" icon="wallet">
       <AssetForm />
-    </section>
+    </StepSection>
   );
 };
 

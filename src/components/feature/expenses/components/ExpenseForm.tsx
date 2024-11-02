@@ -1,34 +1,47 @@
 'use client';
 import { useCallback, useMemo } from 'react';
 
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+
 import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useWatch,
-} from 'react-hook-form';
-
-import { ExpenseFieldRow, Button, LucidIcon, ExpenseTotal } from '@components';
-
-import { ExpenseFormValues } from '../expenses.types';
+  ExpenseFieldRow,
+  Button,
+  LucidIcon,
+  ExpenseTotal,
+  FormStep,
+  FormStepNavigation,
+} from '@components';
 import { useStore } from '@hooks';
 
+import { ExpenseFormValues } from '../expenses.types';
+
 export const ExpenseForm = () => {
-  const formMethods = useForm<ExpenseFormValues>({
-    defaultValues: {
-      expenses: [],
-    },
-  });
-  const { handleSubmit, control } = formMethods;
+  const direction = useStore((state) => state.direction);
+  const incrementCurrentStep = useStore((state) => state.onNext);
+  const setExpenses = useStore((state) => state.setExpenses);
+  const setTotalExpenses = useStore((state) => state.setTotalExpenses);
+
+  const { control, trigger } = useFormContext<ExpenseFormValues>();
 
   const { fields, append, remove } = useFieldArray<ExpenseFormValues>({
     control,
     name: 'expenses',
   });
+  const formValues = useWatch({
+    control,
+    name: 'expenses',
+  });
 
-  const handleAppend = useCallback(() => {
-    append({ title: '', value: '' });
-  }, [append]);
+  const handleAppend = useCallback(async () => {
+    const isValid = await trigger('expenses');
+
+    if (isValid) {
+      append({
+        title: '',
+        value: '',
+      });
+    }
+  }, [append, trigger]);
 
   const handleRemove = useCallback(
     (index: number) => {
@@ -36,13 +49,6 @@ export const ExpenseForm = () => {
     },
     [remove],
   );
-
-  const setTotalExpenses = useStore((state) => state.setTotalExpenses);
-
-  const formValues = useWatch({
-    control,
-    name: 'expenses',
-  });
 
   const total = useMemo(
     () =>
@@ -52,36 +58,41 @@ export const ExpenseForm = () => {
       ),
     [formValues],
   );
-  console.log('total exes:: ', total);
 
-  setTotalExpenses(total);
+  const handleNext = useCallback(async () => {
+    const isValid = await trigger('expenses');
+    if (!isValid) return;
+
+    setExpenses(formValues);
+    setTotalExpenses(total);
+    incrementCurrentStep();
+  }, [
+    setExpenses,
+    formValues,
+    incrementCurrentStep,
+    setTotalExpenses,
+    total,
+    trigger,
+  ]);
 
   return (
-    <FormProvider {...formMethods}>
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
-        <div className="flex flex-col gap-4">
-          {fields.map((field, index) => (
-            <ExpenseFieldRow
-              key={field.id}
-              index={index}
-              onAdd={handleAppend}
-              onRemove={() => handleRemove(index)}
-            />
-          ))}
-          {total > 0 && <ExpenseTotal total={total} />}
-          {fields?.length === 0 && (
-            <Button variant="green" className="gap-2" onClick={handleAppend}>
-              <LucidIcon
-                name="plus"
-                strokeWidth={2}
-                className="size-5 shrink-0"
-              />
-              اضافه کردن
-            </Button>
-          )}
-        </div>
-      </form>
-    </FormProvider>
+    <>
+      <FormStep direction={direction} className="gap-4">
+        {fields.map((field, index) => (
+          <ExpenseFieldRow
+            key={field.id}
+            index={index}
+            onRemove={() => handleRemove(index)}
+          />
+        ))}
+        <Button variant="green" className="gap-2" onClick={handleAppend}>
+          <LucidIcon name="plus" strokeWidth={2} className="size-5 shrink-0" />
+          اضافه کردن
+        </Button>
+        {total > 0 && <ExpenseTotal total={total} />}
+      </FormStep>
+      <FormStepNavigation onNext={handleNext} />
+    </>
   );
 };
 

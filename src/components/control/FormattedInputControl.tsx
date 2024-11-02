@@ -11,7 +11,7 @@ interface FormattedInputControlProps extends HTMLAttributes<HTMLInputElement> {
 }
 
 export const FormattedInputControl = memo(
-  ({ name, ...rest }: FormattedInputControlProps) => {
+  ({ name, currencyUnit, ...rest }: FormattedInputControlProps) => {
     const { control } = useFormContext();
 
     return (
@@ -25,16 +25,16 @@ export const FormattedInputControl = memo(
               type="text"
               {...rest}
               className={clx(
-                'flex-1 bg-transparent px-3 outline-0 shrink-0',
+                'flex-1 bg-transparent px-3 outline-0 w-full',
                 rest.inputClassName,
               )}
               inputMode="numeric"
               value={formatNumberWithCommas(value)}
               onChange={(e) => onChange(formatNumberWithCommas(e.target.value))}
             />
-            {rest.currencyUnit && (
+            {currencyUnit && (
               <span className="shrink-0 bg-gray-200 mr-auto text-gray-500 px-3 text-xs inline-flex items-center justify-center text-center">
-                {rest.currencyUnit}
+                {currencyUnit}
               </span>
             )}
           </div>

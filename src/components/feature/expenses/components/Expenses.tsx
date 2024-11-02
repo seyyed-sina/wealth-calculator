@@ -1,11 +1,10 @@
-import { ExpenseForm } from '@components';
+import { ExpenseForm, StepSection } from '@components';
 
 export const Expenses = () => {
   return (
-    <div>
-      <h2 className="text-xl font-medium mb-6">هزینه ها (مخارج)</h2>
+    <StepSection title="هزینه ها یا بدهی ها" icon="hand-coins">
       <ExpenseForm />
-    </div>
+    </StepSection>
   );
 };
 

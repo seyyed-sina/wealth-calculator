@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/pseudo-random */
 import { twMerge } from 'tailwind-merge';
 
 export const isClient = () => typeof window !== 'undefined';
@@ -85,4 +86,21 @@ export const formatNumberWithCommas = (value: string): string => {
   return decimal !== undefined
     ? `${formattedInteger}.${decimal}`
     : formattedInteger;
+};
+
+/**
+ * Returns a placeholder string from the given array by the given index.
+ * If the array is exhausted, it will wrap around to the beginning.
+ * If the array is empty, it will return the given default placeholder.
+ * @param {ReadonlyArray<string>} placeholders - Required. The array of placeholder strings.
+ * @param {number} index - Required. The index of the placeholder to retrieve.
+ * @param {string | undefined} [defaultPlaceholder] - Optional. The default placeholder to return if the array is empty.
+ * @returns {string} The placeholder string at the given index.
+ */
+export const getPlaceholderByIndex = (
+  placeholders: ReadonlyArray<string>,
+  index: number,
+  defaultPlaceholder?: string,
+): string => {
+  return placeholders[index % placeholders.length] ?? defaultPlaceholder ?? '';
 };

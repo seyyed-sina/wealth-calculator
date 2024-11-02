@@ -1,5 +1,5 @@
 'use client';
-import { CalculateForm } from '@components';
+import { CalculateForm, FormStepNavigation, StepSection } from '@components';
 import { useStore } from '@hooks';
 
 export const Calculation = () => {
@@ -8,11 +8,11 @@ export const Calculation = () => {
   const difference = totalAssets - totalExpenses;
 
   return (
-    <section>
-      <h2 className="text-xl font-medium mb-6">محاسبات</h2>
+    <StepSection title="محاسبات" icon="calculator">
       {difference <= 0 && <span>خمسی به شما تعلق نمی گیرد</span>}
       {difference > 0 && <CalculateForm />}
-    </section>
+      <FormStepNavigation />
+    </StepSection>
   );
 };
 

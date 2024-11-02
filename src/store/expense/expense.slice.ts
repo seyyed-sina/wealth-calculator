@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand';
 import { Expense, ExpenseState } from './expense.type';
 
 const initialState: ExpenseState = {
-  expenses: [{ title: '', value: '' }],
+  expenses: [],
   totalExpenses: 0,
 };
 

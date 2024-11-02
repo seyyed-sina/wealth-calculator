@@ -3,64 +3,68 @@ import { memo } from 'react';
 
 import { useFormContext } from 'react-hook-form';
 
-import { Button, FormattedInputControl, LucidIcon } from '@components';
+import {
+  Button,
+  FormattedInputControl,
+  FormField,
+  FormValidation,
+  LucidIcon,
+} from '@components';
+import { getPlaceholderByIndex } from '@utils';
+
+import { FormValues } from '../../form/form.type';
+import { assetsPlaceholders } from '../assets.data';
 
 interface AssetFieldRowProps {
   index: number;
-  onAdd: () => void;
   onRemove?: () => void;
 }
 
-export const AssetFieldRow = memo(
-  ({ onAdd, onRemove, index }: AssetFieldRowProps) => {
-    const { register } = useFormContext();
+export const AssetFieldRow = memo(({ onRemove, index }: AssetFieldRowProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormValues>();
+  console.log('errors: ', errors);
 
-    return (
-      <div className="flex items-center flex-wrap gap-3">
-        <div className="flex items-center flex-wrap gap-2 flex-1">
+  return (
+    <div className="flex items-end flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 grow">
+        <FormField label="عنوان دارایی" inputId={`assets.${index}.title`}>
           <input
-            {...register(`assets.${index}.name`)}
+            {...register(`assets.${index}.title`)}
             type="text"
-            placeholder="عنوان دارایی"
-            className="flex-1 inputbox"
+            id={`assets.${index}.title`}
+            placeholder={getPlaceholderByIndex(assetsPlaceholders, index)}
+            className="w-full inputbox"
           />
+        </FormField>
+        <FormField label="مقدار" inputId={`assets.${index}.value`}>
           <FormattedInputControl
             name={`assets.${index}.value`}
+            id={`assets.${index}.value`}
             className="flex-1 inputbox"
             currencyUnit="تومان"
             aria-placeholder="مبلغ دارایی"
           />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            type="submit"
-            size="small"
-            variant="green"
-            className="gap-2"
-            aria-label="Add new asset"
-            onClick={onAdd}>
-            <LucidIcon
-              name="plus"
-              strokeWidth={2}
-              className="size-5 shrink-0"
-            />
-            اضافه کردن
-          </Button>
-          {onRemove && (
-            <Button
-              variant="red"
-              size="small"
-              className="gap-2"
-              aria-label="Remove asset"
-              onClick={onRemove}>
-              <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
-              حذف کردن
-            </Button>
+          {errors.assets?.[index]?.value?.message && (
+            <FormValidation error={errors.assets?.[index]?.value?.message} />
           )}
-        </div>
+        </FormField>
       </div>
-    );
-  },
-);
+      {onRemove && (
+        <Button
+          variant="red"
+          size="small"
+          className="gap-2"
+          aria-label="Remove asset"
+          onClick={onRemove}>
+          <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
+          حذف کردن
+        </Button>
+      )}
+    </div>
+  );
+});
 
 AssetFieldRow.displayName = 'AssetFieldRow';
