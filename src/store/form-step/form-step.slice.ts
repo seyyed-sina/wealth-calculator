@@ -28,10 +28,13 @@ const initialState: FormStepState = {
 export const createFormStepSlice: StateCreator<FormStepper> = (set) => ({
   ...initialState,
   onNext: () =>
-    set((state) => ({
-      currentStep: Math.min(state.currentStep + 1, state.steps.length - 1),
-      direction: 'next',
-    })),
+    set((state) => {
+      const nextStep = state.currentStep + 1;
+      return {
+        currentStep: nextStep < state.steps.length ? nextStep : state.steps.length - 1,
+        direction: 'next',
+      };
+    }),
   onPrev: () =>
     set((state) => ({
       currentStep: Math.max(state.currentStep - 1, 0),

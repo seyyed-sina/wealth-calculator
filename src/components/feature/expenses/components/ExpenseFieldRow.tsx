@@ -12,8 +12,8 @@ import {
 } from '@components';
 import { getPlaceholderByIndex } from '@utils';
 
-import { FormValues } from '../../form/form.type';
 import { expensesPlaceholders } from '../expenses.data';
+import { ExpenseFormValues } from '../expenses.types';
 
 interface ExpenseFieldRowProps {
   index: number;
@@ -25,20 +25,20 @@ export const ExpenseFieldRow = memo(
     const {
       register,
       formState: { errors },
-    } = useFormContext<FormValues>();
+    } = useFormContext<ExpenseFormValues>();
 
     return (
-      <div className="flex items-end flex-wrap gap-3">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 grow">
-          <FormField label="عنوان هزینه" inputId={`expenses.${index}.title`}>
-            <input
-              {...register(`expenses.${index}.title`)}
-              type="text"
-              id={`expenses.${index}.title`}
-              placeholder={getPlaceholderByIndex(expensesPlaceholders, index)}
-              className="inputbox w-full"
-            />
-          </FormField>
+      <div className="flex flex-col xs:flex-row flex-wrap gap-2">
+        <FormField label="عنوان هزینه" inputId={`expenses.${index}.title`}>
+          <input
+            {...register(`expenses.${index}.title`)}
+            type="text"
+            id={`expenses.${index}.title`}
+            placeholder={getPlaceholderByIndex(expensesPlaceholders, index)}
+            className="inputbox w-full"
+          />
+        </FormField>
+        <div className="flex flex-1 gap-2 grow">
           <FormField label="مقدار" inputId={`expenses.${index}.value`}>
             <FormattedInputControl
               name={`expenses.${index}.value`}
@@ -46,6 +46,7 @@ export const ExpenseFieldRow = memo(
               className="w-full inputbox"
               currencyUnit="تومان"
               aria-placeholder="مقدار هزینه"
+              aria-invalid={!!errors.expenses?.[index]?.value?.message}
             />
             {errors?.expenses?.[index]?.value?.message && (
               <FormValidation
@@ -53,18 +54,17 @@ export const ExpenseFieldRow = memo(
               />
             )}
           </FormField>
+          {onRemove && (
+            <Button
+              variant="red"
+              size="small"
+              className="gap-2 mt-6"
+              aria-label="Remove expense"
+              onClick={onRemove}>
+              <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
+            </Button>
+          )}
         </div>
-        {onRemove && (
-          <Button
-            variant="red"
-            size="small"
-            className="gap-2"
-            aria-label="Remove expense"
-            onClick={onRemove}>
-            <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
-            حذف کردن
-          </Button>
-        )}
       </div>
     );
   },

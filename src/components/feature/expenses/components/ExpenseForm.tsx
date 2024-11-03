@@ -1,32 +1,48 @@
 'use client';
 import { useCallback, useMemo } from 'react';
 
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 
 import {
   ExpenseFieldRow,
   Button,
   LucidIcon,
-  ExpenseTotal,
-  FormStep,
   FormStepNavigation,
+  TotalValue,
+  FormStep,
 } from '@components';
 import { useStore } from '@hooks';
 
+import { expenseSchema } from '../../form/form.data';
 import { ExpenseFormValues } from '../expenses.types';
 
 export const ExpenseForm = () => {
-  const direction = useStore((state) => state.direction);
-  const incrementCurrentStep = useStore((state) => state.onNext);
+  const expenses = useStore((state) => state.expenses);
   const setExpenses = useStore((state) => state.setExpenses);
   const setTotalExpenses = useStore((state) => state.setTotalExpenses);
+  const incrementCurrentStep = useStore((state) => state.onNext);
 
-  const { control, trigger } = useFormContext<ExpenseFormValues>();
+  const formMethods = useForm<ExpenseFormValues>({
+    defaultValues: {
+      expenses,
+    },
+    resolver: zodResolver(expenseSchema),
+    mode: 'onChange',
+  });
+
+  const { control, trigger, handleSubmit } = formMethods;
 
   const { fields, append, remove } = useFieldArray<ExpenseFormValues>({
     control,
     name: 'expenses',
   });
+
   const formValues = useWatch({
     control,
     name: 'expenses',
@@ -34,13 +50,12 @@ export const ExpenseForm = () => {
 
   const handleAppend = useCallback(async () => {
     const isValid = await trigger('expenses');
+    if (!isValid) return;
 
-    if (isValid) {
-      append({
-        title: '',
-        value: '',
-      });
-    }
+    append({
+      title: '',
+      value: '',
+    });
   }, [append, trigger]);
 
   const handleRemove = useCallback(
@@ -76,23 +91,34 @@ export const ExpenseForm = () => {
   ]);
 
   return (
-    <>
-      <FormStep direction={direction} className="gap-4">
-        {fields.map((field, index) => (
-          <ExpenseFieldRow
-            key={field.id}
-            index={index}
-            onRemove={() => handleRemove(index)}
-          />
-        ))}
-        <Button variant="green" className="gap-2" onClick={handleAppend}>
-          <LucidIcon name="plus" strokeWidth={2} className="size-5 shrink-0" />
-          اضافه کردن
-        </Button>
-        {total > 0 && <ExpenseTotal total={total} />}
-      </FormStep>
-      <FormStepNavigation onNext={handleNext} />
-    </>
+    <FormProvider {...formMethods}>
+      <form
+        className="relative"
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(handleNext)}>
+        <FormStep className="gap-4">
+          {fields.map((field, index) => (
+            <ExpenseFieldRow
+              key={field.id}
+              index={index}
+              onRemove={() => handleRemove(index)}
+            />
+          ))}
+          <Button variant="primary" className="gap-2" onClick={handleAppend}>
+            <LucidIcon
+              name="plus"
+              strokeWidth={2}
+              className="size-5 shrink-0"
+            />
+            اضافه کردن
+          </Button>
+        </FormStep>
+        <FormStepNavigation>
+          <TotalValue total={total} title="مجموع هزینه ها" />
+        </FormStepNavigation>
+      </form>
+    </FormProvider>
   );
 };
 

@@ -1,3 +1,4 @@
+'use client'
 import { HTMLAttributes, memo } from 'react';
 
 import { Controller, useFormContext } from 'react-hook-form';
@@ -18,7 +19,6 @@ export const FormattedInputControl = memo(
       <Controller
         name={name}
         control={control}
-        defaultValue=""
         render={({ field: { onChange, value } }) => (
           <div className={clx('flex !p-0 overflow-hidden', rest.className)}>
             <input

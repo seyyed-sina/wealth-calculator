@@ -18,27 +18,27 @@ export const CalculateTotal = () => {
   });
   const parsedPureAsset = Number(pureAsset.replace(/,/g, ''));
 
-  const difference = totalAssets - totalExpenses;
-  let netProfit = 0;
-  let portion = 0;
+  const assetExpenseDifference = totalAssets - totalExpenses;
+  let calculatedNetProfit = 0;
+  let annualPortion = 0;
 
-  if (difference > parsedPureAsset) {
-    netProfit = difference - parsedPureAsset;
-    portion = netProfit / 5;
+  if (assetExpenseDifference > parsedPureAsset) {
+    calculatedNetProfit = assetExpenseDifference - parsedPureAsset;
+    annualPortion = calculatedNetProfit / 5;
   }
 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-1">
         <span>اختلاف هزینه و درآمد:</span>
-        <span className="font-medium">
-          {formatNumberWithCommas(difference.toString())} تومان
+        <span className="font-bold">
+          {formatNumberWithCommas(assetExpenseDifference.toString())} تومان
         </span>
       </div>
       <div className="flex items-center gap-1">
         <span>میزان خمس امسال:</span>
-        <span className="font-medium">
-          {formatNumberWithCommas(portion.toString())} تومان
+        <span className="font-bold text-xl">
+          {formatNumberWithCommas(annualPortion.toString())} تومان
         </span>
       </div>
     </div>

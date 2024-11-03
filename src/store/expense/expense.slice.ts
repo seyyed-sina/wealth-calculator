@@ -9,8 +9,8 @@ const initialState: ExpenseState = {
 
 export const createExpenseSlice: StateCreator<Expense> = (set) => ({
   ...initialState,
-  setExpenses: (Expenses: { title: string; value: string }[]) => {
-    set((state) => ({ ...state, Expenses }));
+  setExpenses: (expenses: { title: string; value: string }[]) => {
+    set((state) => ({ ...state, expenses }));
   },
   setTotalExpenses: (totalExpenses: number) => {
     set((state) => ({ ...state, totalExpenses }));

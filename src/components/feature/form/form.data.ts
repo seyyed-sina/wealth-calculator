@@ -17,8 +17,10 @@ const sharedSchema = z.object({
     ),
 });
 
-export const formSchema = z.object({
+export const assetSchema = z.object({
   assets: z.array(sharedSchema),
+});
+
+export const expenseSchema = z.object({
   expenses: z.array(sharedSchema),
-  pureAsset: z.string(),
 });

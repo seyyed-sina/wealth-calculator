@@ -37,6 +37,9 @@ const config: Config = {
         gray: colorValue.gray,
         text: colorValue.text,
       },
+      screens: {
+        xs: '30rem',
+      },
     },
   },
   plugins: [scrollbarPlugin],

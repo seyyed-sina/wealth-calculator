@@ -1,8 +1,38 @@
-.inputbox {
-  @apply border-2 border-solid border-gray-200 outline-0 focus:border-primary-500 focus-within:border-primary-500 font-normal text-sm px-3 py-2 rounded-lg min-h-10 transition-colors;
+%disabled {
+  @apply border-gray-200 bg-gray-300/70 text-gray-400 pointer-events-none cursor-default;
+}
 
-  &:focus,
-  &:focus-within {
-    @apply outline-0;
+%error {
+  @apply border-red;
+}
+
+.inputbox {
+  @apply border-2 border-solid border-gray-200 outline-0 font-normal text-sm px-3 py-2 rounded-lg min-h-10 transition-colors;
+
+  &:is(:active, :focus, :focus-within) {
+    @apply border-primary-500 outline-0;
+  }
+
+  &[aria-invalid='true'],
+  &:has([aria-invalid='true']) {
+    @extend %error;
+  }
+
+  &:is(.disabled, [disabled], [aria-disabled='true']) {
+    @extend %disabled;
+  }
+
+  &,
+  input {
+    @apply placeholder:text-gray-400 placeholder:text-xs;
+  }
+}
+
+input[type='search'] {
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
   }
 }

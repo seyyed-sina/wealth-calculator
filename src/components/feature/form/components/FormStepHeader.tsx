@@ -30,7 +30,7 @@ export const FormStepHeader = memo(({ className }: FormStepHeaderProps) => {
           />
           <span
             className={clx(
-              ' transition-colors duration-300 text-sm',
+              'transition-colors duration-100 text-sm text-gray-400 font-medium',
               currentStep === step.id && 'text-primary',
             )}>
             {step.name}

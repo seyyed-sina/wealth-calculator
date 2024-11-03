@@ -12,13 +12,14 @@ export const buttonVariants = cva({
     variant: {
       empty: 'bg-transparent !p-0',
       primary: 'bg-primary text-white hover:bg-primary-500',
-      secondary: 'bg-secondary text-white hover:bg-secondary-500',
+      'gray-100': 'bg-gray-100 hover:bg-gray-200/70 text-gray-700',
       green: 'bg-green text-white hover:bg-green-500',
-      red: 'bg-red text-white hover:bg-red-500',
+      red: 'bg-red-400 text-white hover:bg-red-500',
       'border-primary':
         'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-white',
     },
     size: {
+      empty: 'p-0',
       small: 'text-sm py-1 px-3 h-10',
       medium: 'text-base py-2 px-4 h-11',
     },

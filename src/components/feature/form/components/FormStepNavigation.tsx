@@ -1,18 +1,16 @@
-import { memo } from 'react';
+import { memo, PropsWithChildren } from 'react';
 
 import { Button, LucidIcon } from '@components';
 import { useStore } from '@hooks';
 
-interface FormStepNavigationProps {
-  onNext?: () => void;
+interface FormStepNavigationProps extends PropsWithChildren {
   onPrev?: () => void;
 }
 
 export const FormStepNavigation = memo(
-  ({ onNext, onPrev }: FormStepNavigationProps) => {
+  ({ children, onPrev }: FormStepNavigationProps) => {
     const steps = useStore((state) => state.steps);
     const decrementCurrentStep = useStore((state) => state.onPrev);
-    const incrementCurrentStep = useStore((state) => state.onNext);
     const currentStep = useStore((state) => state.currentStep);
 
     const nextStepTitle =
@@ -24,32 +22,34 @@ export const FormStepNavigation = memo(
       currentStep === 0 ? null : steps[currentStep - 1].name;
 
     return (
-      <div className="flex justify-between container max-w-2xl py-5 fixed bottom-0 inset-x-0 w-full">
-        {currentStep !== 0 && (
-          <Button
-            size="small"
-            variant="border-primary"
-            className="flex items-center gap-2"
-            onClick={onPrev || decrementCurrentStep}>
-            <LucidIcon name="chevron-right" className="size-6" />
-            {prevStepTitle && (
-              <span className="leading-none">{prevStepTitle}</span>
-            )}
-          </Button>
-        )}
-        {currentStep !== steps.length - 1 && (
-          <Button
-            type="submit"
-            size="small"
-            variant="border-primary"
-            className="flex items-center gap-2 mr-auto"
-            onClick={onNext || incrementCurrentStep}>
-            {nextStepTitle && (
-              <span className="leading-none">{nextStepTitle}</span>
-            )}
-            <LucidIcon name="chevron-left" className="size-6" />
-          </Button>
-        )}
+      <div className="py-4 fixed bottom-0 inset-x-0 w-full border-t border-gray-200 border-solid">
+        <div className="container max-w-2xl flex justify-between items-end">
+          {currentStep !== 0 && (
+            <Button
+              size="small"
+              variant="gray-100"
+              className="flex items-center gap-2"
+              onClick={onPrev || decrementCurrentStep}>
+              <LucidIcon name="chevron-right" className="size-6" />
+              {prevStepTitle && (
+                <span className="leading-none">{prevStepTitle}</span>
+              )}
+            </Button>
+          )}
+          {children}
+          {currentStep !== steps.length - 1 && (
+            <Button
+              type="submit"
+              size="small"
+              variant="gray-100"
+              className="flex items-center gap-2">
+              {nextStepTitle && (
+                <span className="leading-none">{nextStepTitle}</span>
+              )}
+              <LucidIcon name="chevron-left" className="size-6" />
+            </Button>
+          )}
+        </div>
       </div>
     );
   },

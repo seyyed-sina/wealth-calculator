@@ -12,8 +12,8 @@ import {
 } from '@components';
 import { getPlaceholderByIndex } from '@utils';
 
-import { FormValues } from '../../form/form.type';
 import { assetsPlaceholders } from '../assets.data';
+import { AssetFormValues } from '../assets.types';
 
 interface AssetFieldRowProps {
   index: number;
@@ -24,21 +24,20 @@ export const AssetFieldRow = memo(({ onRemove, index }: AssetFieldRowProps) => {
   const {
     register,
     formState: { errors },
-  } = useFormContext<FormValues>();
-  console.log('errors: ', errors);
+  } = useFormContext<AssetFormValues>();
 
   return (
-    <div className="flex items-end flex-wrap gap-3">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 grow">
-        <FormField label="عنوان دارایی" inputId={`assets.${index}.title`}>
-          <input
-            {...register(`assets.${index}.title`)}
-            type="text"
-            id={`assets.${index}.title`}
-            placeholder={getPlaceholderByIndex(assetsPlaceholders, index)}
-            className="w-full inputbox"
-          />
-        </FormField>
+    <div className="flex flex-col xs:flex-row flex-wrap gap-2">
+      <FormField label="عنوان دارایی" inputId={`assets.${index}.title`}>
+        <input
+          {...register(`assets.${index}.title`)}
+          type="text"
+          id={`assets.${index}.title`}
+          placeholder={getPlaceholderByIndex(assetsPlaceholders, index)}
+          className="w-full inputbox"
+        />
+      </FormField>
+      <div className="flex flex-1 gap-2 grow">
         <FormField label="مقدار" inputId={`assets.${index}.value`}>
           <FormattedInputControl
             name={`assets.${index}.value`}
@@ -46,23 +45,23 @@ export const AssetFieldRow = memo(({ onRemove, index }: AssetFieldRowProps) => {
             className="flex-1 inputbox"
             currencyUnit="تومان"
             aria-placeholder="مبلغ دارایی"
+            aria-invalid={!!errors.assets?.[index]?.value?.message}
           />
           {errors.assets?.[index]?.value?.message && (
             <FormValidation error={errors.assets?.[index]?.value?.message} />
           )}
         </FormField>
+        {onRemove && (
+          <Button
+            variant="red"
+            size="small"
+            className="gap-2 mt-6"
+            aria-label="Remove asset"
+            onClick={onRemove}>
+            <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
+          </Button>
+        )}
       </div>
-      {onRemove && (
-        <Button
-          variant="red"
-          size="small"
-          className="gap-2"
-          aria-label="Remove asset"
-          onClick={onRemove}>
-          <LucidIcon name="x" strokeWidth={2} className="size-5 shrink-0" />
-          حذف کردن
-        </Button>
-      )}
     </div>
   );
 });
