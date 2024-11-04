@@ -26,6 +26,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: colorValue.primary.DEFAULT,
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 // const sahel = localFont({
@@ -71,11 +74,6 @@ const vazir = localFont({
   variable: '--font-vazir',
   weight: '300 400 500 600',
 });
-
-// const notoSans = Noto_Sans_Arabic({
-//   subsets: ['arabic'],
-//   weight: ['400', '500', '600', '700'],
-// });
 
 export default function RootLayout({
   children,

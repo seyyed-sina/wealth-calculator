@@ -1,5 +1,12 @@
-import { FormStepProvider } from '@components';
+import { FormStepProvider, PageHeader } from '@components';
 
 export default function Home() {
-  return <FormStepProvider />;
+  return (
+    <>
+      <PageHeader>
+        <h1 className="font-bold">خمس من</h1>
+      </PageHeader>
+      <FormStepProvider />
+    </>
+  );
 }

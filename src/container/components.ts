@@ -28,6 +28,7 @@ export * from '../components/layout/MainLayout';
 export * from '../components/layout/MainHeader';
 export * from '../components/layout/MainFooter';
 export * from '../components/layout/StepSection';
+export * from '../components/layout/PageHeader';
 
 // Assets
 export * from '../components/feature/assets/components/Assets';

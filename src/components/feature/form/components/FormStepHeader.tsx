@@ -25,7 +25,7 @@ export const FormStepHeader = memo(({ className }: FormStepHeaderProps) => {
           <span
             className={clx(
               'size-4 rounded-full bg-gray-200 flex items-center justify-center shrink-0 transition-colors duration-300',
-              currentStep === step.id && 'bg-primary outline-primary',
+              currentStep === step.id && 'bg-primary',
             )}
           />
           <span
