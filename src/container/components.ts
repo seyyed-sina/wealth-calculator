@@ -30,6 +30,15 @@ export * from '../components/layout/MainFooter';
 export * from '../components/layout/StepSection';
 export * from '../components/layout/PageHeader';
 
+// Sidebar
+export * from '../components/feature/sidebar/components/Sidebar';
+export * from '../components/feature/sidebar/components/SidebarItem';
+// export * from '../components/feature/sidebar/components/Sidebar';
+// export * from '../components/feature/sidebar/components/SidebarHeader';
+// export * from '../components/feature/sidebar/components/SidebarContent';
+// export * from '../components/feature/sidebar/components/SidebarFooter';
+// export * from '../components/feature/sidebar/components/SidebarItemLink';
+
 // Assets
 export * from '../components/feature/assets/components/Assets';
 export * from '../components/feature/assets/components/AssetForm';
