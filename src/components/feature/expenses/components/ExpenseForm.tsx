@@ -8,6 +8,7 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import {
   ExpenseFieldRow,
@@ -33,10 +34,11 @@ export const ExpenseForm = () => {
       expenses,
     },
     resolver: zodResolver(expenseSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
 
-  const { control, trigger, handleSubmit } = formMethods;
+  const { control, handleSubmit, getFieldState } = formMethods;
+  console.log('getFieldState: ', getFieldState('expenses'));
 
   const { fields, append, remove } = useFieldArray<ExpenseFormValues>({
     control,
@@ -48,15 +50,12 @@ export const ExpenseForm = () => {
     name: 'expenses',
   });
 
-  const handleAppend = useCallback(async () => {
-    const isValid = await trigger('expenses');
-    if (!isValid) return;
-
+  const handleAppend = useCallback(() => {
     append({
       title: '',
       value: '',
     });
-  }, [append, trigger]);
+  }, [append]);
 
   const handleRemove = useCallback(
     (index: number) => {
@@ -74,21 +73,17 @@ export const ExpenseForm = () => {
     [formValues],
   );
 
-  const handleNext = useCallback(async () => {
-    const isValid = await trigger('expenses');
-    if (!isValid) return;
-
+  const handleNext = useCallback(() => {
     setExpenses(formValues);
     setTotalExpenses(total);
     incrementCurrentStep();
-  }, [
-    setExpenses,
-    formValues,
-    incrementCurrentStep,
-    setTotalExpenses,
-    total,
-    trigger,
-  ]);
+  }, [setExpenses, formValues, incrementCurrentStep, setTotalExpenses, total]);
+
+  const handleError = () => {
+    if (getFieldState('expenses').invalid) {
+      toast.error('لطفاً همه فیلدهای مقدار را پر کنید');
+    }
+  };
 
   return (
     <FormProvider {...formMethods}>
@@ -96,7 +91,7 @@ export const ExpenseForm = () => {
         className="relative"
         noValidate
         autoComplete="off"
-        onSubmit={handleSubmit(handleNext)}>
+        onSubmit={handleSubmit(handleNext, handleError)}>
         <FormStep className="gap-4">
           {fields.map((field, index) => (
             <ExpenseFieldRow

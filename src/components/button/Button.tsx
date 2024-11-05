@@ -12,9 +12,9 @@ export const buttonVariants = cva({
     variant: {
       empty: 'bg-transparent !p-0',
       primary: 'bg-primary text-white hover:bg-primary-500',
-      'gray-100': 'bg-gray-100 hover:bg-gray-200/70 text-gray-700',
+      'gray-100': 'bg-gray-50 hover:bg-gray-100 text-gray-700',
       green: 'bg-green text-white hover:bg-green-500',
-      red: 'bg-red-400 text-white hover:bg-red-500',
+      red: 'bg-red-400 text-white hover:bg-red-300',
       'border-primary':
         'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-white',
     },

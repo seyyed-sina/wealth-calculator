@@ -8,6 +8,7 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import {
   AssetFieldRow,
@@ -36,7 +37,7 @@ export const AssetForm = () => {
     mode: 'onChange',
   });
 
-  const { control, trigger, handleSubmit } = formMethods;
+  const { control, handleSubmit, getFieldState } = formMethods;
 
   const { fields, append, remove } = useFieldArray<AssetFormValues>({
     control,
@@ -48,12 +49,9 @@ export const AssetForm = () => {
     name: 'assets',
   });
 
-  const handleAppend = useCallback(async () => {
-    const isValid = await trigger('assets');
-    if (!isValid) return;
-
+  const handleAppend = useCallback(() => {
     append({ title: '', value: '' });
-  }, [append, trigger]);
+  }, [append]);
 
   const handleRemove = useCallback((index: number) => remove(index), [remove]);
 
@@ -66,29 +64,25 @@ export const AssetForm = () => {
     [formValues],
   );
 
-  const handleNext = useCallback(async () => {
-    const isValid = await trigger('assets');
-    if (!isValid) return;
-
+  const handleNext = useCallback(() => {
     setAssets(formValues);
     setTotalAssets(total);
     incrementCurrentStep();
-  }, [
-    setAssets,
-    formValues,
-    incrementCurrentStep,
-    setTotalAssets,
-    total,
-    trigger,
-  ]);
+  }, [setAssets, formValues, incrementCurrentStep, setTotalAssets, total]);
+
+  const handleError = () => {
+    if (getFieldState('assets').invalid) {
+      toast.error('لطفاً همه فیلدهای مقدار را پر کنید');
+    }
+  };
 
   return (
     <FormProvider {...formMethods}>
       <form
-        noValidate
         className="relative"
+        noValidate
         autoComplete="off"
-        onSubmit={handleSubmit(handleNext)}>
+        onSubmit={handleSubmit(handleNext, handleError)}>
         <FormStep className="gap-4">
           {fields.map((field, index) => (
             <AssetFieldRow

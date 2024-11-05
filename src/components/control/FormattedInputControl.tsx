@@ -33,7 +33,7 @@ export const FormattedInputControl = memo(
               onChange={(e) => onChange(formatNumberWithCommas(e.target.value))}
             />
             {currencyUnit && (
-              <span className="shrink-0 bg-gray-200 mr-auto text-gray-500 px-3 text-xs inline-flex items-center justify-center text-center">
+              <span className="shrink-0 bg-gray-100 mr-auto text-gray-500 px-3 text-xs inline-flex items-center justify-center text-center">
                 {currencyUnit}
               </span>
             )}

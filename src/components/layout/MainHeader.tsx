@@ -13,8 +13,6 @@ export const MainHeader = () => {
 
   const getPageTitle = useMemo(() => {
     switch (pathname) {
-      case routes.HOME:
-        return 'محاسبات';
       case routes.SUPPORT:
         return 'حمایت از ما';
       case routes.ABOUT:
@@ -31,7 +29,7 @@ export const MainHeader = () => {
   }, [pathname]);
 
   return (
-    <header className="border-solid border-b border-b-gray-200 h-18 fixed top-0 w-full z-10">
+    <header className="border-solid border-b border-b-gray-100 bg-gray-50 h-18 fixed top-0 w-full z-20">
       <div className="container max-w-2xl flex items-center justify-center text-center h-full relative">
         <Button
           variant="empty"

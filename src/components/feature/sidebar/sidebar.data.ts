@@ -4,7 +4,7 @@ import { SidebarItem } from './sidebar.type';
 
 export const SidebarItems: SidebarItem[] = [
   {
-    title: 'محاسبه',
+    title: 'صفحه نخست',
     icon: 'calculator',
     href: '/',
   },

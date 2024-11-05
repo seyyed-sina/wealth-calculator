@@ -22,7 +22,7 @@ export const FormStepNavigation = memo(
       currentStep === 0 ? null : steps[currentStep - 1].name;
 
     return (
-      <div className="py-4 fixed bottom-0 inset-x-0 w-full border-t border-gray-200 border-solid">
+      <div className="py-4 fixed bottom-0 inset-x-0 z-20 w-full border-t border-gray-100 bg-white border-solid">
         <div className="container max-w-2xl flex justify-between items-end">
           {currentStep !== 0 && (
             <Button

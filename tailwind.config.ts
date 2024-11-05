@@ -29,6 +29,9 @@ const config: Config = {
         },
       },
       colors: colorValue,
+      fontFamily: {
+        vazir: ['var(--font-vazir)'],
+      },
       screens: {
         xs: '30rem',
       },

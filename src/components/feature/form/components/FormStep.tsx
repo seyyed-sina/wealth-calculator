@@ -19,11 +19,7 @@ export const FormStep = memo(({ children, className }: FormStepProps) => {
   //   {children}
   // </motion.div>
   return (
-    <div
-      className={clx(
-        'relative overflow-y-auto h-[calc(100dvh-160px-128px-52px)] overflow-x-hidden scrollbar-none flex flex-col flex-1',
-        className,
-      )}>
+    <div className={clx('relative flex flex-col flex-1 pb-15', className)}>
       {children}
     </div>
   );

@@ -1,5 +1,5 @@
 %disabled {
-  @apply border-gray-200 bg-gray-300/70 text-gray-400 pointer-events-none cursor-default;
+  @apply border-gray-100 bg-gray-300/70 text-gray-400 pointer-events-none cursor-default;
 }
 
 %error {
@@ -7,7 +7,7 @@
 }
 
 .inputbox {
-  @apply border-2 border-solid border-gray-200 outline-0 font-normal text-sm px-3 py-2 rounded-lg min-h-10 transition-colors;
+  @apply border-2 border-solid border-gray-100 outline-0 font-normal text-sm px-3 py-2 rounded-lg min-h-10 transition-colors;
 
   &:is(:active, :focus, :focus-within) {
     @apply border-primary-500 outline-0;

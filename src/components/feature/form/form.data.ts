@@ -7,12 +7,11 @@ const sharedSchema = z.object({
     .min(1, { message: 'لطفا مقدار را وارد کنید' })
     .refine(
       (val) => {
-        console.log('val: ', val);
         const num = Number(val.replace(/,/g, ''));
         return !isNaN(num) && num > 0;
       },
       {
-        message: 'مقدار باید عددی بزرگتر از صفر باشد',
+        message: 'مقدار باید بزرگتر از صفر باشد',
       },
     ),
 });
