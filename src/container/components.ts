@@ -33,11 +33,6 @@ export * from '../components/layout/PageHeader';
 // Sidebar
 export * from '../components/feature/sidebar/components/Sidebar';
 export * from '../components/feature/sidebar/components/SidebarItem';
-// export * from '../components/feature/sidebar/components/Sidebar';
-// export * from '../components/feature/sidebar/components/SidebarHeader';
-// export * from '../components/feature/sidebar/components/SidebarContent';
-// export * from '../components/feature/sidebar/components/SidebarFooter';
-// export * from '../components/feature/sidebar/components/SidebarItemLink';
 
 // Assets
 export * from '../components/feature/assets/components/Assets';
@@ -53,3 +48,10 @@ export * from '../components/feature/expenses/components/ExpenseFieldRow';
 export * from '../components/feature/calculation/components/Calculation';
 export * from '../components/feature/calculation/components/CalculateForm';
 export * from '../components/feature/calculation/components/CalculateTotal';
+
+// Contact
+export * from '../components/feature/contact/components/Contact';
+export * from '../components/feature/contact/components/ContactSocialItem';
+
+// Support
+export * from '../components/feature/support/component/Support';

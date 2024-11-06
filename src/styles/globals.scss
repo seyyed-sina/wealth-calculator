@@ -4,3 +4,11 @@
 @tailwind utilities;
 
 @include meta.load-css('form');
+
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}

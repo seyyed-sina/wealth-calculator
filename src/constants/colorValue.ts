@@ -149,4 +149,11 @@ export const colorValue = {
   },
   error: '#D9544F', // Error red with enough contrast
   success: '#4ABF5B',
+  telegram: '#0088cc',
+  linkedin: '#0a66c2',
+  gmail: '#ea4335',
+  whatsapp: '#25D366',
+  facebook: '#4267B2',
+  twitter: '#1DA1F2',
+  phone: '#0088cc',
 } as const;

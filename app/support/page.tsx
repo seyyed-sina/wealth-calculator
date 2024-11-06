@@ -1,5 +1,7 @@
-const Support = () => {
-  return <div>Support</div>;
+import { Support } from '@components';
+
+const SupportPage = () => {
+  return <Support />;
 };
 
-export default Support
+export default SupportPage;
