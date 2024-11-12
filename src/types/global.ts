@@ -11,4 +11,7 @@ export interface FormStep {
 
 export interface LocalResponse<T> {
   data: T;
+  status: number;
+  message: string;
+  error: boolean;
 }

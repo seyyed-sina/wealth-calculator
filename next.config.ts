@@ -1,14 +1,11 @@
 import type { NextConfig } from 'next';
 
-// const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig: NextConfig = {
-  // basePath: isProd ? '/wealth-calculator' : '',
-  // assetPrefix: isProd ? '/wealth-calculator' : '',
-  // output: 'export',
   reactStrictMode: true,
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: isProd,
   },
 };
 

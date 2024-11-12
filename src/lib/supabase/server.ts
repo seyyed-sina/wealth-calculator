@@ -28,3 +28,14 @@ export async function createClient() {
     },
   });
 }
+
+export async function getSupabaseAuth() {
+  const { auth } = await createClient();
+  return auth;
+}
+
+export async function getUser() {
+  const auth = await getSupabaseAuth();
+  const { data } = await auth.getUser();
+  return data?.user ?? null;
+}

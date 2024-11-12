@@ -1,6 +1,3 @@
-'use server';
-
-import { createClient } from '@/lib/supabase/server';
 import { routes } from '@constants';
 
 import { SidebarItem } from './sidebar.type';
@@ -37,12 +34,3 @@ export const SidebarItems: SidebarItem[] = [
     href: routes.SUPPORT,
   },
 ];
-
-export const getUser = async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return user;
-};

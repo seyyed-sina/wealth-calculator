@@ -1,4 +1,4 @@
-'use client';
+'use client';;
 import { Button, LucidIcon, SidebarItem, SidebarUser } from '@components';
 import { useStore } from '@hooks';
 
