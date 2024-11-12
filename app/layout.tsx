@@ -1,11 +1,11 @@
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata, Viewport } from 'next';
-import localFont from 'next/font/local';
 
 import { MainLayout } from '@components';
 import { colorValue, vazir } from '@constants';
 
 import '@/styles/globals.scss';
+import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
   title: {
@@ -31,11 +31,17 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const supabase = await createClient();
+
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+
   return (
     <html lang="fa" dir="rtl" className={vazir.variable}>
       <body className="font-vazir antialiased text-text font-normal">

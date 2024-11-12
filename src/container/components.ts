@@ -33,6 +33,7 @@ export * from '../components/layout/PageHeader';
 // Sidebar
 export * from '../components/feature/sidebar/components/Sidebar';
 export * from '../components/feature/sidebar/components/SidebarItem';
+export * from '../components/feature/sidebar/components/SidebarUser';
 
 // Assets
 export * from '../components/feature/assets/components/Assets';
@@ -55,3 +56,8 @@ export * from '../components/feature/contact/components/ContactSocialItem';
 
 // Support
 export * from '../components/feature/support/component/Support';
+
+// Auth
+export * from '../components/feature/auth/components/SignIn';
+export * from '../components/feature/auth/components/SignInGoogle';
+export * from '../components/feature/auth/components/SignUp';

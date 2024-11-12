@@ -8,3 +8,7 @@ export interface FormStep {
   id: string | number;
   name: string;
 }
+
+export interface LocalResponse<T> {
+  data: T;
+}

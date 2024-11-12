@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      // "@/*": ["./src/*"],
+      "@/lib/*": ["./src/lib/*"],
       "@/components/*": ["./src/components/*"],
       "@/features/*": ["src/components/feature/*"],
       "@components": ["./src/container/components.ts"],
@@ -28,6 +28,7 @@
       "@types": ["./src/container/types.ts"],
       "@utils": ["./src/container/utils.ts"],
       "@hooks": ["./src/container/hooks.ts"],
+      "@adapter": ["./src/services/adapter.ts"],
       "@/styles/*": ["./src/styles/*"]
     }
   },

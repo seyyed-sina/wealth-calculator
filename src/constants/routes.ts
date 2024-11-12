@@ -5,4 +5,6 @@ export const routes = {
   SUPPORT: '/support',
   FAQ: '/faq',
   GUIDE: '/guide',
+  SIGN_IN: '/auth/login',
+  SIGN_UP: '/auth/register',
 } as const;

@@ -1,6 +1,7 @@
 'use client';
 import { memo, PropsWithChildren, useLayoutEffect } from 'react';
 
+import { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { AppProgressBar } from 'next-nprogress-bar';
@@ -10,7 +11,7 @@ import { LucidIcon, MainHeader, Sidebar } from '@components';
 import { colorValue } from '@constants';
 import { useStore } from '@hooks';
 
-type MainLayoutProps = PropsWithChildren;
+type MainLayoutProps = PropsWithChildren
 
 export const MainLayout = memo(({ children }: MainLayoutProps) => {
   const pathname = usePathname();

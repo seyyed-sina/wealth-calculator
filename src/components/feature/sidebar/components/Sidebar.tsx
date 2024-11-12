@@ -1,8 +1,8 @@
 'use client';
-import { Button, LucidIcon, SidebarItem } from '@components';
+import { Button, LucidIcon, SidebarItem, SidebarUser } from '@components';
+import { useStore } from '@hooks';
 
 import { SidebarItems } from '../sidebar.data';
-import { useStore } from '@hooks';
 
 export const Sidebar = () => {
   const closeSidebar = useStore((state) => state.closeSidebar);
@@ -15,15 +15,16 @@ export const Sidebar = () => {
         onClick={closeSidebar}>
         <LucidIcon name="arrow-right" />
       </Button>
-      <div className="h-64 bg-primary-400 w-full flex items-end px-5 py-3">
+      <div className="h-48 bg-primary-400 w-full flex items-end px-5 py-3">
         <h1 className="text-lg font-medium text-white"> خمس من</h1>
       </div>
-      <nav className="h-full mt-4">
+      <nav className="grow mt-4">
         <ul className="flex flex-col">
           {SidebarItems.map((item) => (
             <SidebarItem key={item.title} item={item} />
           ))}
         </ul>
+        <SidebarUser />
       </nav>
     </div>
   );
