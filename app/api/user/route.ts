@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getSupabaseAuth } from '@/lib/supabase/server';
+import { getSupabaseAuth } from '@/lib/supabase/auth';
 import { LocalResponse } from '@types';
 
 export async function GET() {

@@ -27,7 +27,7 @@ export const FormStepNavigation = memo(
           {currentStep !== 0 && (
             <Button
               size="small"
-              variant="gray-100"
+              variant="white"
               className="flex items-center gap-2"
               onClick={onPrev || decrementCurrentStep}>
               <LucidIcon name="chevron-right" className="size-6" />
@@ -41,7 +41,7 @@ export const FormStepNavigation = memo(
             <Button
               type="submit"
               size="small"
-              variant="gray-100"
+              variant="white"
               className="flex items-center gap-2">
               {nextStepTitle && (
                 <span className="leading-none">{nextStepTitle}</span>

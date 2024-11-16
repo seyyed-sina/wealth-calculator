@@ -1,66 +1,99 @@
 'use server';
-
-import { revalidatePath } from 'next/cache';
+import { Provider } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 
-import { createClient, getSupabaseAuth } from '@/lib/supabase/server';
+import { getSupabaseAuth } from '@/lib/supabase/auth';
+import { createClient } from '@/lib/supabase/server';
+import { env } from '@constants';
+import { getErrorMessage } from '@utils';
 
-// export async function signInAction(currentState: any, formData: FormData) {
-export async function signInAction() {
-  // const supabase = await createClient();
+import { SignUpForm } from './auth.types';
 
-  // // type-casting here for convenience
-  // // in practice, you should validate your inputs
-  // const data = {
-  //   email: formData.get('email') as string,
-  //   password: formData.get('password') as string,
-  // };
+export async function signUpAction(formData: SignUpForm) {
+  try {
+    const auth = await getSupabaseAuth();
+    const credentials = {
+      email: formData.email,
+      password: formData.password,
+    };
 
-  // const { error } = await supabase.auth.signInWithPassword(data);
-  // console.log('error login user: ', error?.status);
+    const { error } = await auth.signUp({
+      ...credentials,
+      options: { data: { full_name: formData.full_name } },
+    });
 
-  // if (error?.status === 400 || error?.code === 'invalid_credentials') {
-  //   return 'اطلاعات ورود نادرست است';
-  // }
+    if (error) throw error;
 
-  // revalidatePath('/', 'layout');
-  // redirect('/');
+    const authData = {
+      email: formData.email,
+      password: formData.password,
+    };
+
+    const { data, error: loginError } = await auth.signInWithPassword(authData);
+
+    if (loginError) throw loginError;
+
+    if (!data.session) throw new Error('No session');
+
+    return { errorMessage: null };
+  } catch (error) {
+    return { errorMessage: getErrorMessage(error) };
+  }
+}
+
+export async function signInWithPasswordAction(formData: FormData) {
   const auth = await getSupabaseAuth();
 
-  const { data, error } = await auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: 'http://localhost:5000/auth/callback',
-      queryParams: {
-        access_type: 'offline',
-        prompt: 'consent',
+  try {
+    // type-casting here for convenience
+    // in practice, you should validate your inputs
+    const authData = {
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+    };
+
+    const { data, error } = await auth.signInWithPassword(authData);
+
+    if (error) throw error;
+    if (!data.session) throw new Error('No session');
+
+    return { errorMessage: null };
+  } catch (error) {
+    return { errorMessage: getErrorMessage(error) };
+  }
+}
+
+export const signInWithSocialAction = async (provider: Provider) => {
+  try {
+    const publicUrl = env.PUBLIC_URL;
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${publicUrl}/auth/callback`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
-    },
-  });
-  console.log('error: ', error);
+    });
 
-  if (data.url) {
-    redirect(data.url); // use the redirect API for your server framework
+    if (error) throw error;
+
+    return { errorMessage: null, url: data.url };
+  } catch (error) {
+    return { errorMessage: getErrorMessage(error) };
   }
-}
+};
 
-export async function signUpAction(state: any, formData: FormData) {
-  const supabase = await createClient();
+export const signOutAction = async () => {
+  try {
+    const auth = await getSupabaseAuth();
+    const { error } = await auth.signOut();
+    if (error) throw error;
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  };
-
-  const { error } = await supabase.auth.signUp(data);
-  console.log('error of sign up: ', error);
-
-  if (error) {
-    return error.message;
+    return { errorMessage: null };
+  } catch (error) {
+    return { errorMessage: getErrorMessage(error) };
   }
-
-  revalidatePath('/', 'layout');
-  redirect('/');
-}
+};

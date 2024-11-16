@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/pseudo-random */
 import { twMerge } from 'tailwind-merge';
 
 export const isClient = () => typeof window !== 'undefined';
@@ -103,4 +102,38 @@ export const getPlaceholderByIndex = (
   defaultPlaceholder?: string,
 ): string => {
   return placeholders[index % placeholders.length] ?? defaultPlaceholder ?? '';
+};
+
+/**
+ * Retrieves an error message from an unknown error object.
+ *
+ * @param {unknown} error - The error object to process.
+ * @param {string} [defaultMessage='Something went wrong'] - The default message to return if the error doesn't have a message.
+ * @returns {string} The extracted error message or the default message.
+ */
+export const getErrorMessage = (
+  error: unknown,
+  defaultMessage: string = 'Something went wrong',
+): string => {
+  console.error(error);
+  let errorMessage: string = defaultMessage;
+  if (error instanceof Error && error.message.length < 100) {
+    errorMessage = error.message;
+  }
+  return errorMessage;
+};
+
+/**
+ * Returns the first character of the first word in the given name.
+ * If the name is empty, returns an empty string.
+ * @param {string} name - The name to get the initial from.
+ * @returns {string} The first character of the first word in the given name.
+ */
+export const initialAvatar = (name: string): string => {
+  if (!name) return '';
+  const nameParts = name.trim().split(' ');
+  const initials = nameParts
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('');
+  return initials.slice(0, 1);
 };

@@ -11,12 +11,15 @@ export const buttonVariants = cva({
   variants: {
     variant: {
       empty: 'bg-transparent !p-0',
+      white: 'bg-white hover:bg-gray-50',
       primary: 'bg-primary text-white hover:bg-primary-500',
       'gray-100': 'bg-gray-50 hover:bg-gray-100 text-gray-700',
       green: 'bg-green text-white hover:bg-green-500',
       red: 'bg-red-400 text-white hover:bg-red-300',
       'border-primary':
         'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-white',
+      'border-gray-100':
+        'border-2 border-solid border-gray-100 text-gray-700 hover:border-primary',
     },
     size: {
       empty: 'p-0',

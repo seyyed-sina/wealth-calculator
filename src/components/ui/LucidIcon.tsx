@@ -33,6 +33,7 @@ export const LucidIcon = memo(({ name, ...props }: IconProps) => {
 
   // lucide-react/dynamicIconImports makes makes NextJS development server very slow
   // https://github.com/lucide-icons/lucide/issues/1576
+  // eslint-disable-next-line import/namespace
   const Icon = icons[componentName];
 
   return <Icon strokeWidth={1.5} {...props} />;

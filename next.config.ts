@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: isProd,
   },
+  images: {
+    domains: ['lh3.googleusercontent.com'],
+  },
+  transpilePackages: ['lucide-react'],
 };
 
 export default nextConfig;

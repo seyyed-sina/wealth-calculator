@@ -1,26 +1,37 @@
-import { useActionState } from 'react';
-
+'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 import { FormField, SignInGoogle, SubmitButton } from '@components';
 import { routes } from '@constants';
 
-import { signInAction } from '../auth.actions';
+import { signInWithPasswordAction } from '../auth.actions';
 
 export const SignIn = () => {
-  // const [state, formAction] = useActionState(signInAction, null);
-  // console.log('state: ', state);
+  const router = useRouter();
+  // const [pending, startTransition] = useTransition();
 
+  const handleAction = async (formData: FormData) => {
+    const { errorMessage } = await signInWithPasswordAction(formData);
+    if (!errorMessage) {
+      router.replace('/');
+      toast.success('ورود با موفقیت انجام شد', { duration: 5000 });
+    } else {
+      toast.error(errorMessage);
+    }
+  };
   return (
     <section className="py-8 flex flex-col gap-6">
       <SignInGoogle />
-      {/* <form action={formAction} className="flex flex-col gap-4">
+      <form action={handleAction} className="flex flex-col gap-4">
         <FormField label="ایمیل" inputId="email">
           <input
             id="email"
             name="email"
             type="email"
             required
+            // disabled={pending}
             className="inputbox w-full"
           />
         </FormField>
@@ -30,11 +41,12 @@ export const SignIn = () => {
             name="password"
             type="password"
             required
+            // disabled={pending}
             className="inputbox w-full"
           />
         </FormField>
         <SubmitButton label="ورود" />
-      </form> */}
+      </form>
       <div className="flex items-center justify-center text-center text-sm gap-1">
         عضو نیستید؟{' '}
         <Link href={routes.SIGN_UP} className="text-primary" shallow>

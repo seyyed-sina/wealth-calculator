@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { HTMLAttributes, memo } from 'react';
 
 import { Controller, useFormContext } from 'react-hook-form';

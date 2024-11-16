@@ -9,8 +9,10 @@ import { createFormStepSlice } from './form-step/form-step.slice';
 import { FormStepper } from './form-step/form-step.types';
 import { createSidebarSlice } from './sidebar/sidebar.slice';
 import { TSidebar } from './sidebar/sidebar.type';
+import { createUserSlice } from './user/user.slice';
+import { UserSlice } from './user/user.types';
 
-type StoreState = Asset & Expense & FormStepper & TSidebar;
+type StoreState = Asset & Expense & FormStepper & TSidebar & UserSlice;
 
 export const useStore = create(
   devtools<StoreState>((...arg) => ({
@@ -18,5 +20,6 @@ export const useStore = create(
     ...createExpenseSlice(...arg),
     ...createFormStepSlice(...arg),
     ...createSidebarSlice(...arg),
+    ...createUserSlice(...arg),
   })),
 );
