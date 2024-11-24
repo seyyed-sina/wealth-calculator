@@ -28,6 +28,7 @@ export * from '../components/ui/NextImage';
 
 // Layout
 export * from '../components/layout/MainLayout';
+export * from '../components/layout/AuthLayout';
 export * from '../components/layout/header/MainHeader';
 export * from '../components/layout/header/MainHeaderTitle';
 export * from '../components/layout/header/MainHeaderSidebarToggle';

@@ -1,6 +1,5 @@
 'use server';
 import { Provider } from '@supabase/supabase-js';
-import { redirect } from 'next/navigation';
 
 import { getSupabaseAuth } from '@/lib/supabase/auth';
 import { createClient } from '@/lib/supabase/server';
@@ -8,6 +7,9 @@ import { env } from '@constants';
 import { getErrorMessage } from '@utils';
 
 import { SignUpForm } from './auth.types';
+
+const PUBLIC_URL = env.PUBLIC_URL;
+const REDIRECT_URL = `${PUBLIC_URL}/api/auth/callback`;
 
 export async function signUpAction(formData: SignUpForm) {
   try {
@@ -65,12 +67,11 @@ export async function signInWithPasswordAction(formData: FormData) {
 
 export const signInWithSocialAction = async (provider: Provider) => {
   try {
-    const publicUrl = env.PUBLIC_URL;
     const supabase = await createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${publicUrl}/auth/callback`,
+        redirectTo: REDIRECT_URL,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',

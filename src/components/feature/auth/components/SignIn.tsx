@@ -31,7 +31,6 @@ export const SignIn = () => {
             name="email"
             type="email"
             required
-            // disabled={pending}
             className="inputbox w-full"
           />
         </FormField>
@@ -41,7 +40,6 @@ export const SignIn = () => {
             name="password"
             type="password"
             required
-            // disabled={pending}
             className="inputbox w-full"
           />
         </FormField>

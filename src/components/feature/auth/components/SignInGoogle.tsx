@@ -12,6 +12,7 @@ import { signInWithSocialAction } from '../auth.actions';
 export const SignInGoogle = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
   const handleAction = () => {
     startTransition(async () => {
       const { errorMessage, url } = await signInWithSocialAction('google');

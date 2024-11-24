@@ -1,7 +1,6 @@
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata, Viewport } from 'next';
 
-import { MainLayout } from '@components';
 import { colorValue, vazir } from '@constants';
 
 import '@/styles/globals.scss';
@@ -38,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className={vazir.variable}>
       <body className="font-vazir antialiased text-text font-normal">
-        <MainLayout>{children}</MainLayout>
+        {children}
         <Analytics />
       </body>
     </html>

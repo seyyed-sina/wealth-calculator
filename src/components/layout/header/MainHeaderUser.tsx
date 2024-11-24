@@ -1,8 +1,6 @@
-import Link from 'next/link';
-
 import { getUserName } from '@/components/feature/user/user.actions';
 import { getUser } from '@/lib/supabase/auth';
-import { UserAvatar } from '@components';
+import { Button, UserAvatar } from '@components';
 import { routes } from '@constants';
 
 export const MainHeaderUser = async () => {
@@ -19,8 +17,7 @@ export const MainHeaderUser = async () => {
       )}
       {!user && (
         <div className="flex items-center gap-1 text-sm">
-          <Link href={routes.SIGN_IN}>ورود</Link>
-          <Link href={routes.SIGN_UP}>ثبت نام</Link>
+          <Button tag="a" href={routes.SIGN_IN} size="small" label="ورود" />
         </div>
       )}
     </div>

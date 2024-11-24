@@ -29,6 +29,7 @@
       "@utils": ["./src/container/utils.ts"],
       "@hooks": ["./src/container/hooks.ts"],
       "@adapter": ["./src/services/adapter.ts"],
+      "@services": ["src/containers/services.ts"],
       "@/styles/*": ["./src/styles/*"]
     }
   },

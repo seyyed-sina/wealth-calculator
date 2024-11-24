@@ -2,23 +2,20 @@
 import { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SupabaseUser } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { FormField, FormValidation, SubmitButton } from '@components';
 
-import { updateUserAction } from '../profile.actions';
 import { profileSchema } from '../profile.data';
-import { ProfileForm as IProfileForm } from '../profile.types';
+import { useGetProfile, useUpdateProfile } from '../profile.hooks';
+import { Profile as IProfileForm } from '../profile.types';
 
-interface ProfileFormProps {
-  userData: SupabaseUser;
-}
+export const ProfileForm = () => {
+  const { data, isLoading, isSuccess } = useGetProfile();
+  const { mutate, isPending, error } = useUpdateProfile();
+  const userData = data?.data;
 
-export const ProfileForm = ({ userData }: ProfileFormProps) => {
-  const router = useRouter();
   const {
     reset,
     register,
@@ -27,26 +24,27 @@ export const ProfileForm = ({ userData }: ProfileFormProps) => {
   } = useForm<IProfileForm>({
     resolver: zodResolver(profileSchema),
   });
-
-  const onSubmit: SubmitHandler<IProfileForm> = async (data) => {
-    const { errorMessage } = await updateUserAction(data);
-    if (!errorMessage) {
-      router.refresh();
-      toast.success('ویرایش با موفقیت انجام شد', {
-        duration: 4000,
-      });
-    } else {
-      toast.error(errorMessage);
+  const onSubmit: SubmitHandler<IProfileForm> = (data) => {
+    if (error) {
+      toast.error(error.message);
     }
+    mutate(data, {
+      onSuccess: () => {
+        toast.success('ویرایش با موفقیت انجام شد', {
+          duration: 4000,
+        });
+      },
+    });
   };
 
   useEffect(() => {
-    if (userData?.user_metadata) {
+    if (isSuccess) {
       reset({
-        ...userData.user_metadata,
+        ...userData,
+        full_name: userData?.full_name ?? userData?.user_metadata.full_name,
       });
     }
-  }, [reset, userData.user_metadata]);
+  }, [reset, userData, isSuccess]);
 
   return (
     <section className="py-8 flex flex-col gap-6">
@@ -60,14 +58,14 @@ export const ProfileForm = ({ userData }: ProfileFormProps) => {
             id="full_name"
             type="text"
             aria-invalid={!!errors.full_name}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
             className="inputbox w-full"
           />
           {errors.full_name && (
             <FormValidation error={errors.full_name.message ?? ''} />
           )}
         </FormField>
-        <SubmitButton label="ویرایش" isSubmitting={isSubmitting} />
+        <SubmitButton label="ویرایش" isSubmitting={isPending} />
       </form>
     </section>
   );

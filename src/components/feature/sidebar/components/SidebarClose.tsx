@@ -6,11 +6,11 @@ import { useStore } from '@hooks';
 
 export const SidebarClose = () => {
   const closeSidebar = useStore(useShallow((state) => state.closeSidebar));
-  
+
   return (
     <Button
       variant="empty"
-      className="text-white absolute top-4 right-2 size-10"
+      className="text-white size-10 -mr-3 hover:"
       onClick={closeSidebar}>
       <LucidIcon name="arrow-right" />
     </Button>
