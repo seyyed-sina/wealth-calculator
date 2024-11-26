@@ -4,6 +4,7 @@
 @tailwind utilities;
 
 @include meta.load-css('form');
+@include meta.load-css('vendors/react-advance-cropper');
 
 .rtl {
   direction: rtl;

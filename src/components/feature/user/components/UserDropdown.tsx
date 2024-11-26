@@ -1,34 +1,29 @@
 'use client';
-import { memo, useLayoutEffect, useRef } from 'react';
+import { memo, useRef } from 'react';
 
-import { SupabaseUser } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useShallow } from 'zustand/shallow';
 
 import { LucidIcon, SignOutButton, UserDropdownItem } from '@components';
 import { useOutsideClick, useStore } from '@hooks';
 
+import { Profile } from '../../profile/profile.types';
 import { dropdownMenuItems } from '../user.data';
 
 interface UserDropdownProps {
-  user: SupabaseUser | null;
+  user: Profile;
 }
 
 export const UserDropdown = memo(({ user }: UserDropdownProps) => {
-  const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isOpenDropdown = useStore(useShallow((state) => state.isOpenDropdown));
-  const toggleDropdown = useStore(useShallow((state) => state.toggleDropdown));
-  const userName = user?.user_metadata?.full_name ?? '';
+  const closeDropdown = useStore(useShallow((state) => state.closeDropdown));
+  const userMeta = user?.user_metadata;
+  const userName = user.full_name ?? userMeta?.full_name;
 
   useOutsideClick(dropdownRef, () => {
-    if (isOpenDropdown) toggleDropdown();
+    if (isOpenDropdown) closeDropdown();
   });
-
-  useLayoutEffect(() => {
-    if (isOpenDropdown) toggleDropdown();
-  }, [pathname, toggleDropdown, isOpenDropdown]);
 
   return (
     <div className="flex flex-col rounded-lg bg-white" ref={dropdownRef}>
@@ -43,7 +38,7 @@ export const UserDropdown = memo(({ user }: UserDropdownProps) => {
       <ul className="flex flex-col px-3 pb-2 rounded-b-lg">
         {dropdownMenuItems.map((item) => (
           <UserDropdownItem key={item.id}>
-            <Link href={item.path} className="flex items-center w-full gap-2">
+            <Link href={item.path} className="flex items-center gap-2">
               <LucidIcon name={item.icon} className="shrink-0 size-5" />
               {item.label}
             </Link>

@@ -1,13 +1,14 @@
-import { ProfileForm } from '@components';
+import { getUser } from '@/lib/supabase/auth';
+import { ForbiddenContent, ProfileForm } from '@components';
 
-const ProfilePage =  () => {
-  // const {
-  //   data: { user },
-  // } = await getUser();
+const ProfilePage = async () => {
+  const {
+    data: { user },
+  } = await getUser();
 
-  // if (!user) {
-  //   return <div>Unauthorized</div>;
-  // }
+  if (!user) {
+    return <ForbiddenContent />;
+  }
 
   return <ProfileForm />;
 };

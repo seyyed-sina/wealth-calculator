@@ -14,8 +14,9 @@ export const SidebarAnimate = () => {
   const closeSidebar = useStore(useShallow((state) => state.closeSidebar));
 
   useLayoutEffect(() => {
-    closeSidebar();
-  }, [pathname, closeSidebar]);
+    if (isOpenSidebar) closeSidebar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <AnimatePresence initial={false}>

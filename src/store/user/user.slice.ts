@@ -11,6 +11,7 @@ const initialState: UserState = {
 export const createUserSlice: StateCreator<UserSlice> = (set) => ({
   ...initialState,
   setUser: (user: SupabaseUser | null) => set(() => ({ user })),
+  closeDropdown: () => set({ isOpenDropdown: false }),
   toggleDropdown: () =>
     set((state) => ({ isOpenDropdown: !state.isOpenDropdown })),
 });

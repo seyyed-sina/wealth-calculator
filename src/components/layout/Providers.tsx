@@ -25,7 +25,7 @@ export const Providers = memo(({ children }: PropsWithChildren) => {
   const closeSidebar = useStore(useShallow((state) => state.closeSidebar));
 
   return (
-    <div className="flex flex-col flex-1 bg-white mt-18 min-h-[calc(100dvh-76px)] overflow-y-auto overflow-x-hidden scrollbar-none container max-w-2xl">
+    <>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       <AppProgressBar
         height="3px"
@@ -64,7 +64,7 @@ export const Providers = memo(({ children }: PropsWithChildren) => {
           />
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 });
 

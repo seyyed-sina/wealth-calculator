@@ -6,13 +6,17 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { FormField, FormValidation, SubmitButton } from '@components';
+import { queryKey } from '@constants';
 
 import { profileSchema } from '../profile.data';
 import { useGetProfile, useUpdateProfile } from '../profile.hooks';
 import { Profile as IProfileForm } from '../profile.types';
 
 export const ProfileForm = () => {
-  const { data, isLoading, isSuccess } = useGetProfile();
+  const { data, isLoading, isSuccess } = useGetProfile({
+    queryKey: [queryKey.GET_PROFILE],
+    staleTime: 0,
+  });
   const { mutate, isPending, error } = useUpdateProfile();
   const userData = data?.data;
 
@@ -20,10 +24,14 @@ export const ProfileForm = () => {
     reset,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<IProfileForm>({
     resolver: zodResolver(profileSchema),
+    defaultValues: {
+      full_name: '',
+    },
   });
+
   const onSubmit: SubmitHandler<IProfileForm> = (data) => {
     if (error) {
       toast.error(error.message);
@@ -65,7 +73,11 @@ export const ProfileForm = () => {
             <FormValidation error={errors.full_name.message ?? ''} />
           )}
         </FormField>
-        <SubmitButton label="ویرایش" isSubmitting={isPending} />
+        <SubmitButton
+          label="ویرایش"
+          disabled={!isDirty}
+          isSubmitting={isPending}
+        />
       </form>
     </section>
   );

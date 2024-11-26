@@ -137,3 +137,31 @@ export const initialAvatar = (name: string): string => {
     .join('');
   return initials.slice(0, 1);
 };
+
+
+
+/**
+ * Converts a file size in bytes to a human-readable string.
+ * @param bytes The size of the file in bytes.
+ * @returns The human-readable file size.
+ */
+export function formatFileSize(bytes: number): string {
+  // Edge case handling for negative values
+  if (bytes < 0) throw new Error('Negative file size is not valid');
+  if (bytes === 0) return '0 Bytes';
+
+  const KILOBYTE = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  // Using a single variable for log calculation
+  const logBase = Math.log(bytes) / Math.log(KILOBYTE);
+  const i = Math.floor(logBase);
+
+  // Ensure the index is within array bounds
+  if (i >= sizes.length) {
+    throw new Error('File size too large');
+  }
+
+  const fileSize = parseFloat((bytes / Math.pow(KILOBYTE, i)).toFixed(2));
+  return `${fileSize} ${sizes[i]}`;
+}

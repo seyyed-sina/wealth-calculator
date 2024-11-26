@@ -7,9 +7,13 @@ type MainLayoutProps = PropsWithChildren;
 export const MainLayout = memo(({ children }: MainLayoutProps) => {
   return (
     <main className="flex flex-col min-h-dvh">
-      <MainHeader />
-      <SidebarAnimate />
-      <Providers>{children}</Providers>
+      <Providers>
+        <MainHeader />
+        <SidebarAnimate />
+        <div className="flex flex-col flex-1 bg-white mt-18 min-h-[calc(100dvh-76px)] overflow-y-auto overflow-x-hidden scrollbar-none container max-w-2xl">
+          {children}
+        </div>
+      </Providers>
     </main>
   );
 });

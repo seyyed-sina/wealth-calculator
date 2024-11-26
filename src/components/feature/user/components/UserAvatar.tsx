@@ -1,26 +1,35 @@
 'use client';
-import { memo, useMemo } from 'react';
+import { memo, useLayoutEffect, useMemo } from 'react';
 
-import { SupabaseUser } from '@supabase/supabase-js';
+import { AnimatePresence } from 'framer-motion';
 import { StaticImageData } from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useShallow } from 'zustand/shallow';
 
 import { LucidIcon, NextImage, UserDropdownAnimate } from '@components';
 import { useStore } from '@hooks';
 import { clx, initialAvatar } from '@utils';
 
+import { Profile } from '../../profile/profile.types';
+
 interface UserAvatarProps extends Omit<StaticImageData, 'src'> {
-  user: SupabaseUser | null;
-  userName: string
+  user: Profile;
 }
 
-export const UserAvatar = memo(({ user, userName, ...imageProps }: UserAvatarProps) => {
+export const UserAvatar = memo(({ user, ...imageProps }: UserAvatarProps) => {
+  const pathname = usePathname();
   const userMeta = user?.user_metadata;
-  const avatar_url = userMeta?.avatar_url ?? '';
-  // const userName = userMeta?.full_name ?? '';
+  const avatar_url = user.profile_image ?? userMeta?.avatar_url;
+  const userName = user.full_name ?? userMeta?.full_name;
 
+  const closeDropdown = useStore(useShallow((state) => state.closeDropdown));
   const toggleDropdown = useStore(useShallow((state) => state.toggleDropdown));
   const isOpenDropdown = useStore(useShallow((state) => state.isOpenDropdown));
+
+  useLayoutEffect(() => {
+    if (isOpenDropdown) closeDropdown();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const userAvatar = useMemo(() => {
     if (avatar_url) {
@@ -72,7 +81,9 @@ export const UserAvatar = memo(({ user, userName, ...imageProps }: UserAvatarPro
           )}
         />
       </div>
-      <UserDropdownAnimate user={user} />
+      <AnimatePresence initial={false}>
+        {isOpenDropdown && user && <UserDropdownAnimate user={user} />}
+      </AnimatePresence>
     </>
   );
 });

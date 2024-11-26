@@ -1,3 +1,4 @@
+import { User } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 import { ProfileFormData } from '@/components/feature/profile/profile.types';
@@ -24,19 +25,41 @@ async function checkUser() {
   return user;
 }
 
-async function getProfile(userId: string) {
+async function getProfile(user: User) {
   // Initialize Supabase client
   const supabase = await createClient();
   try {
-    const { data, error } = await supabase
+    const { data: profile, error } = await supabase
       .from(dbTables.profiles.name)
       .select('*')
-      .eq(dbTables.profiles.columns.user_id, userId)
+      .eq(dbTables.profiles.columns.user_id, user.id)
       .single();
 
     console.log('error: ', error);
-    if (error) throw error;
-    return { error: null, data };
+    if (error) {
+      if (error.code === 'PGRST116') {
+        const fullName = user.user_metadata?.full_name ?? '';
+        const profileImage = user.user_metadata?.profile_image ?? '';
+        const email = user.email ?? '';
+
+        // Step 3: Insert a new profile if needed
+        const { data: newProfile, error: insertError } = await supabase
+          .from(dbTables.profiles.name)
+          .insert({
+            user_id: user.id,
+            full_name: fullName,
+            profile_image: profileImage,
+          })
+          .select('*')
+          .single(); // Return the newly created profile
+
+        if (insertError) throw insertError;
+
+        return { error: null, data: newProfile };
+      }
+      throw error;
+    }
+    return { error: null, data: profile };
   } catch (error) {
     return { error: getErrorMessage(error), data: null };
   }
@@ -84,11 +107,14 @@ export async function GET() {
       });
     }
 
-    const { id } = user;
-    const { data, error } = await getProfile(id);
+    // const { id } = user;
+    // console.log('user id: ', id);
+    const { data, error } = await getProfile(user);
+    console.log('data get profile: ', data);
     if (error) {
       return NextResponse.json({
         ...res,
+        status: 400,
         message: error,
       });
     }
@@ -97,6 +123,8 @@ export async function GET() {
       ...res,
       status: 200,
       data,
+      error: null,
+      message: 'success',
     });
   } catch {
     return NextResponse.json({

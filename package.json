@@ -21,6 +21,7 @@
     "next": "^15.0.3",
     "next-nprogress-bar": "^2.3.14",
     "react": "19.0.0-rc-02c0e824-20241028",
+    "react-advanced-cropper": "^0.20.0",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "react-hook-form": "^7.53.1",
     "sass": "^1.80.5",

@@ -8,6 +8,7 @@ export interface UserState {
 export interface UserAction {
   setUser: (user: SupabaseUser | null) => void;
   toggleDropdown: () => void;
+  closeDropdown: () => void;
 }
 
 export type UserSlice = UserState & UserAction;

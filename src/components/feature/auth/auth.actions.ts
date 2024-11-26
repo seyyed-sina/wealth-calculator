@@ -59,7 +59,7 @@ export async function signInWithPasswordAction(formData: FormData) {
     if (error) throw error;
     if (!data.session) throw new Error('No session');
 
-    return { errorMessage: null };
+    return { errorMessage: null, data };
   } catch (error) {
     return { errorMessage: getErrorMessage(error) };
   }

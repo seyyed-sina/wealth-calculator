@@ -13,7 +13,8 @@ export const SignIn = () => {
   // const [pending, startTransition] = useTransition();
 
   const handleAction = async (formData: FormData) => {
-    const { errorMessage } = await signInWithPasswordAction(formData);
+    const { data, errorMessage } = await signInWithPasswordAction(formData);
+    console.log('data: ', data);
     if (!errorMessage) {
       router.replace('/');
       toast.success('ورود با موفقیت انجام شد', { duration: 5000 });
@@ -21,6 +22,7 @@ export const SignIn = () => {
       toast.error(errorMessage);
     }
   };
+  
   return (
     <section className="py-8 flex flex-col gap-6">
       <SignInGoogle />
