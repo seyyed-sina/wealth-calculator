@@ -1,4 +1,4 @@
-'use client';
+'use client';;
 import {
   FC,
   PropsWithChildren,
@@ -8,9 +8,7 @@ import {
   useState,
 } from 'react';
 
-import { createPortal } from 'react-dom';
-
-import { BottomSheetHeader } from '@components';
+import { BottomSheetHeader, ClientPortal } from '@components';
 import { clx } from '@utils';
 
 export interface SheetProps {
@@ -57,34 +55,35 @@ export const BottomSheet: FC<Props> = memo(
       return null;
     }
 
-    return createPortal(
-      <div className="fixed inset-0 z-50 flex items-end justify-center">
-        <div
-          className={clx(
-            'relative z-50 w-full rounded-t-xl transition-transform !duration-[400ms] !ease-sheet overflow-hidden',
-            !backdrop && 'shadow-sheet',
-            animate ? 'translate-y-0' : 'translate-y-full',
-            className,
-          )}>
-          {title && (
-            <BottomSheetHeader
-              title={title}
-              className={headerClassName}
-              onClose={handleContainerClick}
-            />
-          )}
-          {children}
+    return (
+      <ClientPortal show={show}>
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div
+            className={clx(
+              'relative z-50 w-full rounded-t-xl transition-transform !duration-[400ms] !ease-sheet overflow-hidden',
+              !backdrop && 'shadow-sheet',
+              animate ? 'translate-y-0' : 'translate-y-full',
+              className,
+            )}>
+            {title && (
+              <BottomSheetHeader
+                title={title}
+                className={headerClassName}
+                onClose={handleContainerClick}
+              />
+            )}
+            {children}
+          </div>
+          <div
+            className={clx(
+              'fixed inset-0 z-40 bg-black/50 transition-opacity duration-[400ms]',
+              animate && backdrop ? 'opacity-100' : 'opacity-0',
+            )}
+            onKeyDown={handleContainerClick}
+            onClick={handleContainerClick}
+          />
         </div>
-        <div
-          className={clx(
-            'fixed inset-0 z-40 bg-black/50 transition-opacity duration-[400ms]',
-            animate && backdrop ? 'opacity-100' : 'opacity-0',
-          )}
-          onKeyDown={handleContainerClick}
-          onClick={handleContainerClick}
-        />
-      </div>,
-      document.body,
+      </ClientPortal>
     );
   },
 );

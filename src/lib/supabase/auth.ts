@@ -1,10 +1,9 @@
-'use server';
+'use server';;
 import { createServerClient } from '@supabase/ssr';
 import { SupabaseUser } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { dbTables, env } from '@constants';
-import { getErrorMessage } from '@utils';
+import { env } from '@constants';
 
 import { createClient } from './server';
 
@@ -63,42 +62,3 @@ export async function getUser() {
     error: any;
   };
 }
-
-export const getUserName = async () => {
-  try {
-    const supabase = await createClient();
-
-    // Get the authenticated user
-    const {
-      data: { user },
-      error: userError,
-    } = (await supabase.auth.getUser()) as {
-      data: { user: SupabaseUser | null };
-      error: any;
-    };
-
-    if (userError || !user) {
-      throw new Error(userError?.message || 'User not authenticated');
-    }
-
-    // Fetch user profile from 'profiles' table
-    const { data: profile, error: profileError } = await supabase
-      .from(dbTables.profiles.name)
-      .select(dbTables.profiles.columns.full_name)
-      .eq(dbTables.profiles.columns.user_id, user.id)
-      .single(); // Fetch single record for the logged-in user
-
-    if (profileError && profileError.code !== 'PGRST116') {
-      // 'PGRST116' means no rows were found; ignore it
-      throw profileError;
-    }
-
-    // Use full_name from profiles table, fallback to user_metadata
-    const userName =
-      profile?.full_name || user.user_metadata?.full_name || 'کاربر ناشناس';
-
-    return { errorMessage: null, user: { ...user, full_name: userName } };
-  } catch (error) {
-    return { errorMessage: getErrorMessage(error), userName: 'کاربر ناشناس' };
-  }
-};

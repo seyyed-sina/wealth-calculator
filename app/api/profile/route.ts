@@ -1,12 +1,16 @@
-import { User } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import sharp from 'sharp';
 
+import { profileSchema } from '@/components/feature/profile/profile.data';
 import { ProfileFormData } from '@/components/feature/profile/profile.types';
-import { getSupabaseAuth } from '@/lib/supabase/auth';
-import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAuth, getUser } from '@/lib/supabase/auth';
 import { dbTables } from '@constants';
+import {
+  getProfile,
+  updateProfile,
+  uploadImageToSupabase,
+} from '@services/supabase';
 import { LocalResponse } from '@types';
-import { getErrorMessage } from '@utils';
 
 // Default response
 const res: LocalResponse<null> = {
@@ -16,90 +20,25 @@ const res: LocalResponse<null> = {
   error: true,
 };
 
-async function checkUser() {
-  const auth = await getSupabaseAuth();
-  const {
-    data: { user },
-  } = await auth.getUser();
+const { columns } = dbTables.profiles;
 
-  return user;
-}
+function getMissingFields<T extends object>(
+  body: Partial<T>,
+  requiredFields: (keyof T)[],
+): string[] {
+  const missingFields: string[] = requiredFields
+    .map((field) => field.toString())
+    .filter((field) => !body[field as keyof T]);
 
-async function getProfile(user: User) {
-  // Initialize Supabase client
-  const supabase = await createClient();
-  try {
-    const { data: profile, error } = await supabase
-      .from(dbTables.profiles.name)
-      .select('*')
-      .eq(dbTables.profiles.columns.user_id, user.id)
-      .single();
-
-    console.log('error: ', error);
-    if (error) {
-      if (error.code === 'PGRST116') {
-        const fullName = user.user_metadata?.full_name ?? '';
-        const profileImage = user.user_metadata?.profile_image ?? '';
-        const email = user.email ?? '';
-
-        // Step 3: Insert a new profile if needed
-        const { data: newProfile, error: insertError } = await supabase
-          .from(dbTables.profiles.name)
-          .insert({
-            user_id: user.id,
-            full_name: fullName,
-            profile_image: profileImage,
-          })
-          .select('*')
-          .single(); // Return the newly created profile
-
-        if (insertError) throw insertError;
-
-        return { error: null, data: newProfile };
-      }
-      throw error;
-    }
-    return { error: null, data: profile };
-  } catch (error) {
-    return { error: getErrorMessage(error), data: null };
-  }
-}
-
-async function updateProfile(
-  userId: string,
-  payload: Partial<ProfileFormData>,
-) {
-  // Initialize Supabase client
-  const supabase = await createClient();
-  try {
-    // const { data, error } = await supabase
-    // .from(dbTables.profiles.name)
-    // .update(payload)
-    // .eq(dbTables.profiles.columns.user_id, userId)
-    // .select()
-    // .single();
-    const { data, error } = await supabase
-      .from(dbTables.profiles.name)
-      .upsert(
-        { user_id: userId, ...payload },
-        { onConflict: dbTables.profiles.columns.user_id },
-      )
-      .select();
-
-    console.log('error to put: ', error);
-    console.log('data to put: ', data);
-    if (error) throw error;
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error: getErrorMessage(error) };
-  }
+  return missingFields;
 }
 
 export async function GET() {
   try {
-    const user = await checkUser();
+    const {data: { user }, error: userError} = await getUser();
+    console.log('user in get profile check session ==========>: ', user);
 
-    if (!user) {
+    if (userError || !user) {
       return NextResponse.json({
         ...res,
         status: 401,
@@ -107,10 +46,7 @@ export async function GET() {
       });
     }
 
-    // const { id } = user;
-    // console.log('user id: ', id);
     const { data, error } = await getProfile(user);
-    console.log('data get profile: ', data);
     if (error) {
       return NextResponse.json({
         ...res,
@@ -141,7 +77,6 @@ export async function PUT(req: Request) {
     const {
       data: { user },
     } = await auth.getUser();
-    console.log('user in api put route: ', user);
 
     if (!user) {
       return NextResponse.json({
@@ -151,12 +86,54 @@ export async function PUT(req: Request) {
       });
     }
 
-    const { id } = user;
-    const body = await req.json();
-    const { data, error } = await updateProfile(
-      id,
-      body as Partial<ProfileFormData>,
-    );
+    const body: ProfileFormData = await req.json();
+    const parsedBody = profileSchema.parse(body);
+
+    // Define required fields
+    const requiredFields = [columns.full_name, columns.profile_image];
+
+    // Check for missing fields
+    const missingFields = getMissingFields(parsedBody, requiredFields);
+
+    if (missingFields.length > 0) {
+      return NextResponse.json({
+        ...res,
+        status: 400,
+        message: `Missing required fields: ${missingFields.join(', ')}`,
+      });
+    }
+
+    let profileImageUrl = '';
+    if (parsedBody?.profile_image?.startsWith('data:image')) {
+      // Convert Blob to Buffer
+      const base64Data = parsedBody.profile_image.split(',')[1]; // Extract base64 data from Data URL
+      const fileBuffer = Buffer.from(base64Data, 'base64');
+
+      // Optimize the image using Sharp
+      const resizedImage = await sharp(fileBuffer)
+        .resize({ width: 300, height: 300 }) // Resize image to 300x300
+        .toFormat('png') // Convert to PNG
+        .toBuffer();
+
+      // Upload image to Supabase Storage
+      profileImageUrl = await uploadImageToSupabase(resizedImage, user.id);
+
+      if (!profileImageUrl) throw new Error('Failed to generate public URL');
+    } else if (
+      parsedBody.profile_image &&
+      !parsedBody.profile_image.startsWith('data:image')
+    ) {
+      // If profile_image is a URL, retain it as is
+      profileImageUrl = parsedBody.profile_image;
+    }
+
+    // Update profile table
+    const payload: ProfileFormData = {
+      full_name: parsedBody.full_name ?? '',
+      profile_image: profileImageUrl ?? '',
+    };
+
+    const { data, error } = await updateProfile(user.id, payload);
 
     if (error) {
       return NextResponse.json({
@@ -168,8 +145,61 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({
       ...res,
-      status: 200,
       data,
+      status: 200,
+      error: false,
+      message: 'success',
+    });
+  } catch {
+    return NextResponse.json({
+      ...res,
+      status: 500,
+      message: 'Something went wrong',
+    });
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await getUser();
+
+    if (userError || !user) {
+      return NextResponse.json({
+        ...res,
+        status: 401,
+        message: 'Unauthorized',
+      });
+    }
+
+    const { ...fieldsToUpdate }: Partial<ProfileFormData> = await req.json();
+
+    if (Object.keys(fieldsToUpdate).length === 0) {
+      return NextResponse.json({
+        ...res,
+        status: 400,
+        message: 'Fields to update are missing',
+      });
+    }
+
+    const { data, error } = await updateProfile(user.id, fieldsToUpdate);
+
+    if (error) {
+      return NextResponse.json({
+        ...res,
+        status: 400,
+        message: error,
+      });
+    }
+
+    return NextResponse.json({
+      ...res,
+      data,
+      status: 200,
+      error: false,
+      message: 'success',
     });
   } catch {
     return NextResponse.json({

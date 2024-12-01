@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 
 import { useFormStatus } from 'react-dom';
 
-import { Button, ButtonBaseProps, LoadingSpinner } from '@components';
+import { Button, LoadingSpinner, TButtonProps } from '@components';
 import { clx } from '@utils';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
   isSubmitting?: boolean;
   type?: 'button' | 'submit';
   disabled?: boolean;
-} & ButtonBaseProps;
+} & TButtonProps;
 
 export const SubmitButton: FC<Props> = memo(
   ({ children, label, spinnerFill, spinnerSize, ...props }) => {
@@ -25,7 +25,8 @@ export const SubmitButton: FC<Props> = memo(
         tag="button"
         type={props.type ?? 'submit'}
         disabled={props.disabled || isSubmitting}
-        className={props.className}>
+        className={props.className}
+        {...props}>
         <span
           className={clx(
             'flex items-center gap-2',

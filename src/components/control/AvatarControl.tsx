@@ -1,26 +1,20 @@
+'use client';
 import {
   memo,
   useRef,
   useState,
-  FC,
   ChangeEvent,
   useCallback,
   useEffect,
   useMemo,
 } from 'react';
 
-import {
-  Controller,
-  ControllerRenderProps,
-  ErrorOption,
-  FieldValues,
-  useFormContext,
-} from 'react-hook-form';
+import { Controller, ErrorOption, useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { Button, FormValidation, LucidIcon, ReactAvatar } from '@components';
 import { useDebouncedCallback, useToggle } from '@hooks';
-import { clx, formatFileSize } from '@utils';
+import { clx, formatFileSize, getErrorMessage } from '@utils';
 
 interface Props {
   name: string;
@@ -34,8 +28,8 @@ interface Props {
 }
 
 const DEBOUNCE_UPLOAD_DELAY = 300;
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-export const AvatarControl: FC<Props> = memo(
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB
+export const AvatarControl = memo(
   ({
     name,
     error,
@@ -45,7 +39,7 @@ export const AvatarControl: FC<Props> = memo(
     placeholder,
     onChange,
     onDelete,
-  }) => {
+  }: Props) => {
     const [openCrop, toggleCrop] = useToggle();
     const { control, getValues } = useFormContext();
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
@@ -73,11 +67,7 @@ export const AvatarControl: FC<Props> = memo(
         reader.onerror = () => {
           toast.error('آپلود عکس ناموفق بود');
         };
-        try {
-          reader.readAsDataURL(file);
-        } catch {
-          toast.error('آپلود عکس ناموفق بود');
-        }
+        reader.readAsDataURL(file);
       },
       [toggleCrop],
     );
@@ -86,17 +76,15 @@ export const AvatarControl: FC<Props> = memo(
       (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
 
-        if (!file) {
-          resetInput();
-          return;
-        }
-
         try {
+          if (!file) {
+            resetInput();
+            throw new Error('لطفا فایلی برای آپلود انتخاب کنید');
+          }
           if (file.size >= MAX_FILE_SIZE) {
-            toast.error(
+            throw new Error(
               `حجم فایل نباید بیشتر از ${formatFileSize(MAX_FILE_SIZE)} باشد`,
             );
-            return;
           }
 
           if (
@@ -104,17 +92,17 @@ export const AvatarControl: FC<Props> = memo(
               file.type,
             )
           ) {
-            toast.error('فایل انتخاب شده باید عکس باشد');
-            return;
+            throw new Error('فایل انتخاب شده باید عکس باشد');
           }
 
           handlePreview(file);
-          toggleCrop();
+        } catch (error) {
+          toast.error(getErrorMessage(error) || 'آپلود عکس ناموفق بود');
         } finally {
           resetInput();
         }
       },
-      [handlePreview, toggleCrop],
+      [handlePreview],
     );
 
     const debounceUploadImage = useDebouncedCallback(
@@ -122,15 +110,17 @@ export const AvatarControl: FC<Props> = memo(
       DEBOUNCE_UPLOAD_DELAY,
     );
 
-    const onCropImage = (
-      preview: Blob,
-      field: ControllerRenderProps<FieldValues, string>,
-    ) => {
-      const objectURL = URL.createObjectURL(preview);
-      setCroppedImage(objectURL);
-      field.onChange?.(preview);
-      onChange?.(objectURL);
-    };
+    const onCropImage = useCallback(
+      (preview: string, onChangeCallback: (...event: any[]) => void) => {
+        if (preview) {
+          console.log('preview: ', preview);
+          setCroppedImage(preview);
+          onChange?.(preview);
+          onChangeCallback?.(preview);
+        }
+      },
+      [onChange],
+    );
 
     useEffect(() => {
       setSelectedImage(getValues(name));
@@ -140,12 +130,12 @@ export const AvatarControl: FC<Props> = memo(
       };
     }, [getValues, name]);
 
-    const avatarContainer = useMemo(
+    const avatarContainerClass = useMemo(
       () => (imagePreview: string) =>
         clx(
-          'flex items-center justify-center size-34 rounded-full',
+          'flex items-center justify-center size-30 rounded-full',
           !imagePreview &&
-            'border border-gray-150 bg-gray-100 dark:bg-gray-700 dark:border-gray-300 text-gray-200',
+            'border border-solid border-gray-100 bg-gray-50 text-gray-300',
         ),
       [],
     );
@@ -164,8 +154,9 @@ export const AvatarControl: FC<Props> = memo(
         name={name}
         control={control}
         defaultValue={defaultValue}
-        render={({ field }) => {
-          const imagePreview = croppedImage ?? field.value;
+        render={({ field: { onChange, value } }) => {
+          const imagePreview = croppedImage ?? value;
+          console.log('imagePreview: ', imagePreview);
           return (
             <>
               <input
@@ -179,7 +170,7 @@ export const AvatarControl: FC<Props> = memo(
                 <div
                   role="button"
                   tabIndex={-1}
-                  className={avatarContainer(imagePreview)}
+                  className={avatarContainerClass(imagePreview)}
                   aria-label={placeholder ?? 'آپلود عکس'}
                   onKeyDown={triggerInput}
                   onClick={triggerInput}>
@@ -200,15 +191,16 @@ export const AvatarControl: FC<Props> = memo(
                   )}
                   {!imagePreview && (
                     <div className="flex flex-col items-center justify-center text-center gap-2">
-                      <LucidIcon name="upload" className="size-10" />
+                      <LucidIcon name="upload" className="size-8" />
                     </div>
                   )}
                 </div>
                 <div className="flex items-center justify-center flex-col gap-1 leading-5 text-xs mt-3">
-                  <span className="text-gray-200">
-                    حداکثر حجم مجاز تصویر {MAX_FILE_SIZE} می باشد
+                  <span className="text-gray-300">
+                    حداکثر حجم مجاز تصویر {formatFileSize(MAX_FILE_SIZE)} می
+                    باشد
                   </span>
-                  <span className="text-gray-200">
+                  <span className="text-gray-300">
                     فرمت های تصویر مجاز: jpg, jpeg, png, gif
                   </span>
                 </div>
@@ -220,11 +212,11 @@ export const AvatarControl: FC<Props> = memo(
                     label="آپلود عکس"
                     onClick={triggerInput}
                   />
-                  {typeof field.value === 'string' && (
+                  {defaultValue && (
                     <Button
                       size="small"
+                      variant="red"
                       label="حذف"
-                      className="bg-red/20 text-red"
                       onClick={onDelete}
                     />
                   )}
@@ -233,9 +225,9 @@ export const AvatarControl: FC<Props> = memo(
               </div>
               <ReactAvatar
                 isOpen={openCrop}
-                onClose={toggleCrop}
                 src={selectedImage}
-                onCrop={(preview) => onCropImage(preview, field)}
+                onClose={toggleCrop}
+                onCrop={(preview) => onCropImage(preview, onChange)}
               />
             </>
           );

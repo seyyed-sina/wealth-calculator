@@ -36,20 +36,31 @@ export const Providers = memo(({ children }: PropsWithChildren) => {
       />
       <Toaster
         dir="rtl"
-        position="top-center"
+        position="top-right"
         visibleToasts={1}
         icons={{
-          error: <LucidIcon name="info" className="size-5" strokeWidth={2} />,
-          success: (
-            <LucidIcon name="circle-check" className="size-5" strokeWidth={2} />
+          error: <LucidIcon name="info" size={20} strokeWidth={2} />,
+          success: <LucidIcon name="circle-check" size={20} strokeWidth={2} />,
+          close: (
+            <LucidIcon
+              name="x"
+              className="size-4 shrink-0 text-gray-400"
+              strokeWidth={2}
+            />
           ),
         }}
         toastOptions={{
           classNames: {
-            default: 'p-3 min-h-13 text-[13px] !font-vazir !font-normal',
-            error: 'bg-red text-white',
-            success: 'bg-green text-white',
+            icon: 'shrink-0 mt-[5px] self-baseline',
+            default:
+              'p-3 min-h-13 text-[13px] !font-vazir !font-normal border-r-4 border-solid hover:animate-none',
+            error: 'border-r-red text-red',
+            success: 'border-r-green text-green',
+            closeButton:
+              'absolute right-auto -left-4 size-6 !border-none shadow-md',
           },
+          closeButton: true,
+          duration: Infinity,
         }}
       />
       <AnimatePresence initial={false}>

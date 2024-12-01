@@ -2,11 +2,17 @@
 import { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { FormField, FormValidation, SubmitButton } from '@components';
+import {
+  AvatarControl,
+  FormField,
+  FormValidation,
+  SubmitButton,
+} from '@components';
 import { queryKey } from '@constants';
+import { getErrorMessage } from '@utils';
 
 import { profileSchema } from '../profile.data';
 import { useGetProfile, useUpdateProfile } from '../profile.hooks';
@@ -17,68 +23,104 @@ export const ProfileForm = () => {
     queryKey: [queryKey.GET_PROFILE],
     staleTime: 0,
   });
-  const { mutate, isPending, error } = useUpdateProfile();
+  const { mutate, isPending, data: updateData } = useUpdateProfile();
   const userData = data?.data;
 
-  const {
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
-  } = useForm<IProfileForm>({
+  const formMethods = useForm<IProfileForm>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       full_name: '',
+      profile_image: '',
+      email: '',
     },
   });
 
+  const {
+    reset,
+    getValues,
+    register,
+    handleSubmit,
+    formState: { isDirty, errors, isSubmitting },
+  } = formMethods;
+
   const onSubmit: SubmitHandler<IProfileForm> = (data) => {
-    if (error) {
-      toast.error(error.message);
+    const api_data: IProfileForm = {
+      ...data,
+      profile_image: getValues('profile_image'),
+    };
+
+    try {
+      mutate(api_data, {
+        onSuccess: () => {
+          toast.success('ویرایش با موفقیت انجام شد', {
+            duration: 5000,
+          });
+        },
+        onError: (error) => {
+          toast.error(getErrorMessage(error));
+        },
+      });
+      if (updateData?.error) {
+        throw new Error(updateData.message);
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
-    mutate(data, {
-      onSuccess: () => {
-        toast.success('ویرایش با موفقیت انجام شد', {
-          duration: 4000,
-        });
-      },
-    });
   };
 
   useEffect(() => {
     if (isSuccess) {
       reset({
         ...userData,
-        full_name: userData?.full_name ?? userData?.user_metadata.full_name,
       });
     }
   }, [reset, userData, isSuccess]);
 
   return (
     <section className="py-8 flex flex-col gap-6">
-      <form
-        className="flex flex-col gap-4"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}>
-        <FormField label="نام و نام خانوادگی" inputId="full_name" required>
-          <input
-            {...register('full_name')}
-            id="full_name"
-            type="text"
-            aria-invalid={!!errors.full_name}
-            disabled={isSubmitting || isLoading}
-            className="inputbox w-full"
+      <FormProvider {...formMethods}>
+        <form
+          noValidate
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit(onSubmit)}>
+          <AvatarControl
+            name="profile_image"
+            defaultValue={userData?.profile_image}
+            isDisabled={isPending}
           />
-          {errors.full_name && (
-            <FormValidation error={errors.full_name.message ?? ''} />
-          )}
-        </FormField>
-        <SubmitButton
-          label="ویرایش"
-          disabled={!isDirty}
-          isSubmitting={isPending}
-        />
-      </form>
+          <FormField label="نام و نام خانوادگی" inputId="full_name" required>
+            <input
+              {...register('full_name')}
+              id="full_name"
+              type="text"
+              aria-invalid={!!errors.full_name}
+              disabled={isSubmitting || isLoading}
+              className="inputbox w-full"
+            />
+            {errors.full_name && (
+              <FormValidation error={errors.full_name.message ?? ''} />
+            )}
+          </FormField>
+          <FormField label="ایمیل" inputId="email" required>
+            <input
+              {...register('email')}
+              id="email"
+              type="email"
+              aria-invalid={!!errors.email}
+              disabled={isSubmitting || isLoading}
+              className="inputbox w-full"
+            />
+            {errors.email && (
+              <FormValidation error={errors.email.message ?? ''} />
+            )}
+          </FormField>
+          <SubmitButton
+            label="ویرایش"
+            disabled={!isDirty || isPending}
+            isSubmitting={isPending}
+          />
+        </form>
+      </FormProvider>
     </section>
   );
 };

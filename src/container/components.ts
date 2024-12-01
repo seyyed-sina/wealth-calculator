@@ -1,10 +1,11 @@
 // Loading
-export * from '../components/loading/LoadingMask';
-export * from '../components/loading/LoadingContent';
-export * from '../components/loading/LoadingSpinner';
+export * from '../components/common/loading/LoadingMask';
+export * from '../components/common/loading/LoadingContent';
+export * from '../components/common/loading/LoadingSpinner';
 
 // Control
 export * from '../components/control/FormattedInputControl';
+export * from '../components/control/AvatarControl';
 
 // Icon
 export * from '../components/icon/IconGoogle';
@@ -20,7 +21,9 @@ export * from '../components/feature/form/components/TotalValue';
 // UI Common
 export * from '../components/common/LucidIcon';
 export * from '../components/common/NextImage';
+export * from '../components/common/ImageError';
 export * from '../components/common/ForbiddenContent';
+export * from '../components/common/ClientPortal';
 /** form */
 export * from '../components/common/form/FormValidation';
 export * from '../components/common/form/ReactAvatar';

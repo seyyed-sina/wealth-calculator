@@ -9,6 +9,6 @@ export const mutate = {
   userProfile: (data: ProfileFormData) =>
     localMutate<Profile>(apiEndpoints.LOCAL_UPDATE_PROFILE, {
       body: JSON.stringify(data),
-      method: 'PUT',
+      method: 'PATCH',
     }),
 } as const;

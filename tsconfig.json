@@ -30,6 +30,7 @@
       "@hooks": ["./src/container/hooks.ts"],
       "@adapter": ["./src/services/adapter.ts"],
       "@services": ["src/containers/services.ts"],
+      "@services/*": ["src/services/*"],
       "@/styles/*": ["./src/styles/*"]
     }
   },

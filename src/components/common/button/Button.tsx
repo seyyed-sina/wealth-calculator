@@ -15,7 +15,7 @@ export const buttonVariants = cva({
       primary: 'bg-primary text-white hover:bg-primary-500',
       'gray-100': 'bg-gray-50 hover:bg-gray-100 text-gray-700',
       green: 'bg-green text-white hover:bg-green-500',
-      red: 'bg-red-400 text-white hover:bg-red-300',
+      red: 'bg-red-400 text-white hover:bg-red-500',
       'border-primary':
         'border-2 border-solid border-primary text-primary hover:bg-primary hover:text-white',
       'border-gray-100':
@@ -23,8 +23,8 @@ export const buttonVariants = cva({
     },
     size: {
       empty: 'p-0',
-      small: 'text-sm py-1 px-3 h-10',
-      medium: 'text-base py-2 px-4 h-11',
+      small: 'text-sm py-1 px-4 h-9',
+      medium: 'text-base py-2 px-5 h-11',
     },
   },
   defaultVariants: {

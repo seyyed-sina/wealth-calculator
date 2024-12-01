@@ -1,12 +1,13 @@
+'use client';
 import { useCallback, useRef } from 'react';
 
 type CallbackFunction = (...args: any[]) => void;
 /**
- * Returns a memoized function that will only call the passed function when it hasn't been 
+ * Returns a memoized function that will only call the passed function when it hasn't been
  * called for the wait period.
  *
  * @param {CallbackFunction} func - The function to be debounced.
- * @param {number} wait - The amount of time in milliseconds to wait before invoking the 
+ * @param {number} wait - The amount of time in milliseconds to wait before invoking the
  * debounced function.
  * @return A memoized function that is debounced
  */

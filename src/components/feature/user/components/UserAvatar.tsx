@@ -2,17 +2,17 @@
 import { memo, useLayoutEffect, useMemo } from 'react';
 
 import { AnimatePresence } from 'framer-motion';
-import { StaticImageData } from 'next/image';
+import Image, { ImageProps } from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useShallow } from 'zustand/shallow';
 
-import { LucidIcon, NextImage, UserDropdownAnimate } from '@components';
+import { LucidIcon, UserDropdownAnimate } from '@components';
 import { useStore } from '@hooks';
 import { clx, initialAvatar } from '@utils';
 
 import { Profile } from '../../profile/profile.types';
 
-interface UserAvatarProps extends Omit<StaticImageData, 'src'> {
+interface UserAvatarProps extends Omit<ImageProps, 'src' | 'alt'> {
   user: Profile;
 }
 
@@ -34,11 +34,14 @@ export const UserAvatar = memo(({ user, ...imageProps }: UserAvatarProps) => {
   const userAvatar = useMemo(() => {
     if (avatar_url) {
       return (
-        <NextImage
+        <Image
           src={avatar_url}
           {...imageProps}
           alt={userName}
-          className="rounded-full size-full object-cover"
+          className={clx(
+            'rounded-full size-full object-cover bg-gray-100',
+            imageProps.className,
+          )}
         />
       );
     } else if (avatar_url === '' && userName) {
@@ -61,7 +64,6 @@ export const UserAvatar = memo(({ user, ...imageProps }: UserAvatarProps) => {
       </span>
     );
   }, [userName, avatar_url, imageProps]);
-
   return (
     <>
       <div

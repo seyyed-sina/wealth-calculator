@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
     removeConsole: isProd,
   },
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dtijhhlyvooogbmoqewa.supabase.co',
+      },
+    ],
   },
   transpilePackages: ['lucide-react'],
 };

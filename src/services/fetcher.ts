@@ -5,7 +5,5 @@ import { localFetch } from './adapter';
 
 export const fetch = {
   userProfile: () =>
-    localFetch<Profile>(apiEndpoints.LOCAL_GET_PROFILE, {
-      cache: 'no-cache',
-    }),
+    localFetch<Profile>(apiEndpoints.LOCAL_GET_PROFILE),
 } as const;

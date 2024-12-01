@@ -1,4 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+'use client';
+
+import { useCallback, useState } from 'react';
 
 /**
  * A hook to manage a boolean toggle state.
@@ -10,5 +12,5 @@ export const useToggle = (isOpen = false): [boolean, () => void] => {
   const [open, setOpen] = useState(isOpen);
   const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
-  return useMemo(() => [open, toggle], [open, toggle]);
+  return [open, toggle];
 };

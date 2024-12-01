@@ -15,7 +15,13 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
       viewBox="0 0 50 50"
       className={clx(`spinner origin-center`, props.className)}
       xmlns="http://www.w3.org/2000/svg"
-      {...props}>
+      {...props}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        animation: 'rotate 2s linear infinite',
+        border: '1px solid transparent',
+      }}>
       <circle
         className="path"
         cx="25"
@@ -24,18 +30,12 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
         fill="none"
         stroke={props.fill}
         strokeWidth={5}
+        style={{
+          strokeLinecap: 'round',
+          animation: 'dash 1.5s ease-in-out infinite',
+        }}
       />
       <style>{`
-        .spinner {
-          animation: rotate 2s linear infinite;
-          border: 1px solid transparent;
-          width: ${size}px;
-          height: ${size}px;
-        }
-        .path {
-          stroke-linecap: round;
-          animation: dash 1.5s ease-in-out infinite;
-        }
         @keyframes rotate {
           100% {
             transform: rotate(360deg);

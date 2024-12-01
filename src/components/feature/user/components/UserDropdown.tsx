@@ -33,7 +33,9 @@ export const UserDropdown = memo(({ user }: UserDropdownProps) => {
           title={userName}>
           {userName}
         </h3>
-        <span className="text-gray-500 text-xs">{user?.email}</span>
+        {user?.email && (
+          <span className="text-gray-500 text-xs">{user.email}</span>
+        )}
       </div>
       <ul className="flex flex-col px-3 pb-2 rounded-b-lg">
         {dropdownMenuItems.map((item) => (

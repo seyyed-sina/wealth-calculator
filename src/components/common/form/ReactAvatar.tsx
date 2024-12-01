@@ -1,3 +1,4 @@
+'use client';;
 import { FC, memo, useRef, useState } from 'react';
 
 import {
@@ -10,6 +11,7 @@ import {
   ImageRestriction,
   CircleStencil,
 } from 'react-advanced-cropper';
+import { toast } from 'sonner';
 
 import {
   BottomSheet,
@@ -18,10 +20,13 @@ import {
   SheetProps,
   SubmitButton,
 } from '@components';
+import { apiEndpoints } from '@constants';
+import { LocalResponse } from '@types';
+import { getErrorMessage } from '@utils';
 
 type Props = SheetProps & {
   src: string | null;
-  onCrop?: (form: Blob) => void;
+  onCrop?: (imageUrl: string) => void;
 };
 
 export const ReactAvatar: FC<Props> = memo(
@@ -61,15 +66,39 @@ export const ReactAvatar: FC<Props> = memo(
       }));
     };
 
+    const uploadImageRequest = async (formData: FormData) => {
+      const apiUrl =
+        apiEndpoints.LOCAL_BASE_URL + apiEndpoints.LOCAL_UPLOAD_IMAGE;
+      const res = await fetch(apiUrl, {
+        body: formData,
+        method: 'POST',
+      });
+
+      const { data, error } = (await res.json()) as LocalResponse<string>;
+      return { data, error };
+    };
+
     const handleCrop = () => {
       const canvas = cropperRef?.current?.getCanvas();
       if (canvas) {
         updateState('saving', true);
-        canvas.toBlob((blob) => {
-          if (blob) {
+        const form = new FormData();
+        canvas.toBlob(async (blob) => {
+          try {
+            if (blob) {
+              form.append('profile_image', blob);
+              const { data, error } = await uploadImageRequest(form);
+              if (error) {
+                toast.error(`خطا در آپلود عکس ${getErrorMessage(error)}`);
+                return;
+              }
+              onCrop?.(data);
+              onClose();
+            }
+          } catch (error) {
+            toast.error(`خطا در آپلود عکس ${getErrorMessage(error)}`);
+          } finally {
             updateState('saving', false);
-            onClose();
-            onCrop?.(blob);
           }
         });
       }
@@ -97,9 +126,9 @@ export const ReactAvatar: FC<Props> = memo(
             <SubmitButton
               type="button"
               label="تایید و ذخیره"
-              className="mr-auto"
               isSubmitting={state.saving}
-              // onClick={handleCrop}
+              className="mr-auto relative"
+              onClick={handleCrop}
             />
           </BottomSheetFooter>
         </form>

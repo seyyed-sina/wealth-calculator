@@ -1,3 +1,4 @@
+'use client';
 import { memo, PropsWithChildren } from 'react';
 
 import { Button, LucidIcon } from '@components';

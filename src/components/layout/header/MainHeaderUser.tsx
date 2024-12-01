@@ -1,23 +1,12 @@
 'use client';
 import { useGetProfile } from '@/components/feature/profile/profile.hooks';
-import { getUserName } from '@/components/feature/user/user.actions';
-import { getUser } from '@/lib/supabase/auth';
 import { Button, UserAvatar } from '@components';
-import { queryKey, routes } from '@constants';
+import { routes } from '@constants';
 
 export const MainHeaderUser = () => {
-  // const {
-  //   data: { user },
-  // } = await getUser();
-  // const { userName } = await getUserName();
-  // const userMeta = user?.user_metadata;
-  const { data } = useGetProfile({
-    queryKey: [queryKey.GET_PROFILE],
-    staleTime: Infinity,
-  });
+  const { data } = useGetProfile();
   const user = data?.data;
-  console.log('user: ', user);
-  // const userMeta = user?.user_metadata;
+  console.log('user in header: ', user);
 
   return (
     <div className="absolute left-4">
