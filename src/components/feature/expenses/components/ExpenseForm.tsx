@@ -38,7 +38,6 @@ export const ExpenseForm = () => {
   });
 
   const { control, handleSubmit, getFieldState } = formMethods;
-  console.log('getFieldState: ', getFieldState('expenses'));
 
   const { fields, append, remove } = useFieldArray<ExpenseFormValues>({
     control,
@@ -100,7 +99,11 @@ export const ExpenseForm = () => {
               onRemove={() => handleRemove(index)}
             />
           ))}
-          <Button variant="primary" className="gap-2" onClick={handleAppend}>
+          <Button
+            variant="primary"
+            size="lg"
+            className="gap-2"
+            onClick={handleAppend}>
             <LucidIcon
               name="plus"
               strokeWidth={2}

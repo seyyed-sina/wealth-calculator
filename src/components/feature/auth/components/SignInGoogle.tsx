@@ -15,12 +15,12 @@ export const SignInGoogle = () => {
 
   const handleAction = () => {
     startTransition(async () => {
-      const { errorMessage, url } = await signInWithSocialAction('google');
+      const { error, url } = await signInWithSocialAction('google');
 
-      if (!errorMessage && url) {
+      if (!error && url) {
         router.push(url);
       } else {
-        toast.error(errorMessage);
+        toast.error(error);
       }
     });
   };

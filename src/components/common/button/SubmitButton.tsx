@@ -22,7 +22,6 @@ export const SubmitButton: FC<Props> = memo(
     return (
       <Button
         variant={props.variant}
-        tag="button"
         type={props.type ?? 'submit'}
         disabled={props.disabled || isSubmitting}
         className={props.className}

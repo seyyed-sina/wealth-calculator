@@ -27,11 +27,11 @@ export const FormStepNavigation = memo(
         <div className="container max-w-2xl flex justify-between items-end">
           {currentStep !== 0 && (
             <Button
-              size="small"
+              size="sm"
               variant="white"
               className="flex items-center gap-2"
               onClick={onPrev || decrementCurrentStep}>
-              <LucidIcon name="chevron-right" className="size-6" />
+              <LucidIcon name="chevron-right" className="size-5 -mx-1" />
               {prevStepTitle && (
                 <span className="leading-none">{prevStepTitle}</span>
               )}
@@ -41,13 +41,13 @@ export const FormStepNavigation = memo(
           {currentStep !== steps.length - 1 && (
             <Button
               type="submit"
-              size="small"
+              size="sm"
               variant="white"
               className="flex items-center gap-2">
               {nextStepTitle && (
                 <span className="leading-none">{nextStepTitle}</span>
               )}
-              <LucidIcon name="chevron-left" className="size-6" />
+              <LucidIcon name="chevron-left" className="size-5 -mx-1" />
             </Button>
           )}
         </div>

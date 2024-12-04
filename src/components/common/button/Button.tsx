@@ -1,4 +1,10 @@
-import { ButtonHTMLAttributes, memo, ReactNode, useMemo } from 'react';
+import {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  memo,
+  ReactNode,
+  useMemo,
+} from 'react';
 
 import { cva, VariantProps } from 'cva';
 import Link, { LinkProps } from 'next/link';
@@ -23,13 +29,14 @@ export const buttonVariants = cva({
     },
     size: {
       empty: 'p-0',
-      small: 'text-sm py-1 px-4 h-9',
-      medium: 'text-base py-2 px-5 h-11',
+      sm: 'text-sm py-1 px-3 h-9',
+      md: 'text-base py-2 px-4 h-10',
+      lg: 'text-base py-2 px-5 h-11',
     },
   },
   defaultVariants: {
     variant: 'primary',
-    size: 'medium',
+    size: 'md',
   },
 });
 
@@ -46,6 +53,7 @@ export type TButtonProps = {
 export type TLinkProps = {
   tag: 'a';
 } & ButtonBaseProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
   LinkProps;
 
 export type ButtonProps = TButtonProps | TLinkProps;

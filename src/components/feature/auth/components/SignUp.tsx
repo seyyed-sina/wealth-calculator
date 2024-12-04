@@ -1,4 +1,4 @@
-'use client';
+'use client';;
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,9 @@ import { signUpSchema } from '../auth.data';
 import { SignUpForm } from '../auth.types';
 
 export const SignUp = () => {
+  // const [error, setError] = useState('');
+  // const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
 
   const {
@@ -28,29 +31,35 @@ export const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
-    const { errorMessage } = await signUpAction(data);
-    if (!errorMessage) {
+  const handleAction: SubmitHandler<SignUpForm> = async (data) => {
+    // try {
+    const { error } = await signUpAction(data);
+    if (error) {
+      toast.error(error);
+    } else {
       router.replace('/');
       toast.success('ثبت نام با موفقیت انجام شد', {
         duration: 4000,
       });
-    } else {
-      toast.error(errorMessage);
     }
+    // } catch (error) {
+    //   console.log('catch error');
+    //   toast.error(getErrorMessage(error));
+    // }
   };
 
   return (
     <section className="py-8 flex flex-col gap-6">
       <form
-        className="flex flex-col gap-4"
         noValidate
-        onSubmit={handleSubmit(onSubmit)}>
+        className="flex flex-col gap-4"
+        onSubmit={handleSubmit(handleAction)}>
         <FormField label="نام و نام خانوادگی" inputId="full_name" required>
           <input
             {...register('full_name')}
             id="full_name"
             type="text"
+            name="full_name"
             aria-invalid={!!errors.full_name}
             disabled={isSubmitting}
             className="inputbox w-full"
@@ -64,6 +73,7 @@ export const SignUp = () => {
             {...register('email')}
             id="email"
             type="email"
+            name="email"
             aria-invalid={!!errors.email}
             disabled={isSubmitting}
             className="inputbox w-full ltr"
@@ -77,6 +87,7 @@ export const SignUp = () => {
             {...register('password')}
             id="password"
             type="password"
+            name="password"
             aria-invalid={!!errors.password}
             disabled={isSubmitting}
             className="inputbox w-full ltr"

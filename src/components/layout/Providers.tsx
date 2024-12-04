@@ -25,8 +25,8 @@ export const Providers = memo(({ children }: PropsWithChildren) => {
   const closeSidebar = useStore(useShallow((state) => state.closeSidebar));
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
       <AppProgressBar
         height="3px"
         color={colorValue.primary.DEFAULT}
@@ -49,11 +49,12 @@ export const Providers = memo(({ children }: PropsWithChildren) => {
             />
           ),
         }}
+        expand
         toastOptions={{
           classNames: {
             icon: 'shrink-0 mt-[5px] self-baseline',
             default:
-              'p-3 min-h-13 text-[13px] !font-vazir !font-normal border-r-4 border-solid hover:animate-none',
+              'p-3 min-h-13 text-[13px] !font-vazir !font-normal border-r-4 border-solid',
             error: 'border-r-red text-red',
             success: 'border-r-green text-green',
             closeButton:
@@ -75,7 +76,7 @@ export const Providers = memo(({ children }: PropsWithChildren) => {
           />
         )}
       </AnimatePresence>
-    </>
+    </QueryClientProvider>
   );
 });
 

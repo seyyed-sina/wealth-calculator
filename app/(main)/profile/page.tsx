@@ -1,4 +1,4 @@
-import { getUser } from '@/lib/supabase/auth';
+import { getUser } from '@/lib/supabase/auth/server';
 import { ForbiddenContent, ProfileForm } from '@components';
 
 const ProfilePage = async () => {

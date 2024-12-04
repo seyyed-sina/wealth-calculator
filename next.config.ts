@@ -13,9 +13,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'dtijhhlyvooogbmoqewa.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
     ],
   },
   transpilePackages: ['lucide-react'],
+  sassOptions: {
+    silenceDeprecations: ['legacy-js-api'],
+  },
 };
 
 export default nextConfig;

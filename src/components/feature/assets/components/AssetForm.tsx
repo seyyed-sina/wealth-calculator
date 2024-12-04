@@ -104,7 +104,7 @@ export const AssetForm = () => {
               onRemove={() => handleRemove(index)}
             />
           ))}
-          <Button variant="primary" className="gap-2" onClick={handleAppend}>
+          <Button variant="primary" size="lg" className="gap-2" onClick={handleAppend}>
             <LucidIcon
               name="plus"
               strokeWidth={2}

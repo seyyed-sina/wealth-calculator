@@ -38,11 +38,12 @@ export * from '../components/common/bottom-sheet/BottomSheetFooter';
 
 // Layout
 export * from '../components/layout/MainLayout';
-export * from '../components/layout/AuthLayout';
+// export * from '../components/layout/AuthLayout';
 export * from '../components/layout/header/MainHeader';
 export * from '../components/layout/header/MainHeaderTitle';
 export * from '../components/layout/header/MainHeaderSidebarToggle';
 export * from '../components/layout/header/MainHeaderUser';
+export * from '../components/layout/header/AuthHeader';
 export * from '../components/layout/MainFooter';
 export * from '../components/layout/StepSection';
 export * from '../components/layout/PageHeader';

@@ -10,10 +10,6 @@ export const MainHeaderTitle = () => {
 
   const getPageTitle = useMemo(() => {
     switch (pathname) {
-      case routes.SIGN_IN:
-        return 'ورود';
-      case routes.SIGN_UP:
-        return 'ثبت نام';
       case routes.SUPPORT:
         return 'حمایت از ما';
       case routes.ABOUT:

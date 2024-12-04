@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { checkSession } from '@/lib/supabase/auth';
+import { checkSession } from '@/lib/supabase/auth/server';
 import { routes } from '@constants';
 
 export async function middleware(request: NextRequest) {

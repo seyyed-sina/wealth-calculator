@@ -11,7 +11,7 @@ export const LoadingMask: FC<Props> = ({ hasAnimate = true, className }) => {
   return (
     <span
       className={clx(
-        'rounded-xl dark:bg-gray-200 bg-gray-150 block',
+        'rounded-lg bg-gray-100 block',
         hasAnimate && 'animate-pulse',
         className,
       )}

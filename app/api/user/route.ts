@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getSupabaseAuth } from '@/lib/supabase/auth';
+import { getUser } from '@/lib/supabase/auth/server';
 import { LocalResponse } from '@types';
 
 export async function GET() {
@@ -12,12 +12,12 @@ export async function GET() {
   };
 
   try {
-    const auth = await getSupabaseAuth();
     const {
       data: { user },
-    } = await auth.getUser();
+      error: userError,
+    } = await getUser();
 
-    if (!user) {
+    if (userError || !user) {
       return NextResponse.json({
         ...res,
         status: 401,

@@ -3,7 +3,7 @@ import sharp from 'sharp';
 
 import { profileSchema } from '@/components/feature/profile/profile.data';
 import { ProfileFormData } from '@/components/feature/profile/profile.types';
-import { getSupabaseAuth, getUser } from '@/lib/supabase/auth';
+import { getAuth, getUser } from '@/lib/supabase/auth/server';
 import { dbTables } from '@constants';
 import {
   getProfile,
@@ -35,8 +35,10 @@ function getMissingFields<T extends object>(
 
 export async function GET() {
   try {
-    const {data: { user }, error: userError} = await getUser();
-    console.log('user in get profile check session ==========>: ', user);
+    const {
+      data: { user },
+      error: userError,
+    } = await getUser();
 
     if (userError || !user) {
       return NextResponse.json({
@@ -73,7 +75,7 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   try {
-    const auth = await getSupabaseAuth();
+    const auth = await getAuth();
     const {
       data: { user },
     } = await auth.getUser();

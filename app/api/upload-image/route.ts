@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 
-import { getUser } from '@/lib/supabase/auth';
+import { getUser } from '@/lib/supabase/auth/server';
 import { uploadImageToSupabase } from '@services/supabase';
 import { LocalResponse } from '@types';
 import { getErrorMessage } from '@utils';

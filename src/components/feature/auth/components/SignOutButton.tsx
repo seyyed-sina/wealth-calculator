@@ -21,10 +21,10 @@ export const SignOutButton = () => {
    */
   const handleAction = () => {
     startTransition(async () => {
-      const { errorMessage } = await signOutAction();
+      const { error } = await signOutAction();
 
-      if (errorMessage) {
-        toast.error(errorMessage);
+      if (error) {
+        toast.error(error);
       } else {
         router.replace('/');
       }

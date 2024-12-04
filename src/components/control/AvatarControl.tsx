@@ -206,7 +206,7 @@ export const AvatarControl = memo(
                 </div>
                 <div className={commonClasses.buttonGroup}>
                   <Button
-                    size="small"
+                    size="sm"
                     variant="primary"
                     disabled={isDisabled}
                     label="آپلود عکس"
@@ -214,7 +214,7 @@ export const AvatarControl = memo(
                   />
                   {defaultValue && (
                     <Button
-                      size="small"
+                      size="sm"
                       variant="red"
                       label="حذف"
                       onClick={onDelete}

@@ -72,7 +72,6 @@ export const AssetFieldRow = memo(({ onRemove, index }: AssetFieldRowProps) => {
         {onRemove && (
           <Button
             variant="red"
-            size="small"
             className="gap-2 mt-6"
             aria-label="Remove asset"
             onClick={onRemove}>

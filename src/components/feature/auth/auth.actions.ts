@@ -1,7 +1,7 @@
 'use server';
 import { Provider } from '@supabase/supabase-js';
 
-import { getSupabaseAuth } from '@/lib/supabase/auth';
+import { getAuth } from '@/lib/supabase/auth/server';
 import { createClient } from '@/lib/supabase/server';
 import { env } from '@constants';
 import { getErrorMessage } from '@utils';
@@ -11,42 +11,46 @@ import { SignUpForm } from './auth.types';
 const PUBLIC_URL = env.PUBLIC_URL;
 const REDIRECT_URL = `${PUBLIC_URL}/api/auth/callback`;
 
-export async function signUpAction(formData: SignUpForm) {
+export const signUpAction = async (formData: SignUpForm) => {
   try {
-    const auth = await getSupabaseAuth();
-    const credentials = {
-      email: formData.email,
-      password: formData.password,
-    };
-
-    const { error } = await auth.signUp({
-      ...credentials,
-      options: { data: { full_name: formData.full_name } },
-    });
-
-    if (error) throw error;
-
+    const auth = await getAuth();
     const authData = {
       email: formData.email,
       password: formData.password,
     };
+    
+    const { error } = await auth.signUp(authData);
 
+    // Check error
+    if (
+      error?.code === 'user_already_exists' ||
+      error?.code === 'email_exists'
+    ) {
+      return {
+        error: 'کاربری با این ایمیل وجود دارد. لطفاً وارد حساب خود شوید',
+        data: null,
+      };
+    }
+
+    if (error) throw error;
+
+    // temporary redirect to verify email
+    // TO DO: redirect to /login after email verification
     const { data, error: loginError } = await auth.signInWithPassword(authData);
 
     if (loginError) throw loginError;
 
     if (!data.session) throw new Error('No session');
 
-    return { errorMessage: null };
+    return { error: null };
   } catch (error) {
-    return { errorMessage: getErrorMessage(error) };
+    return { error: getErrorMessage(error), data: null };
   }
-}
+};
 
 export async function signInWithPasswordAction(formData: FormData) {
-  const auth = await getSupabaseAuth();
-
   try {
+    const auth = await getAuth();
     // type-casting here for convenience
     // in practice, you should validate your inputs
     const authData = {
@@ -56,12 +60,17 @@ export async function signInWithPasswordAction(formData: FormData) {
 
     const { data, error } = await auth.signInWithPassword(authData);
 
+    if (error?.code === 'invalid_credentials') {
+      return { error: 'ایمیل یا رمز عبور اشتباه است', data: null };
+    }
+
     if (error) throw error;
+
     if (!data.session) throw new Error('No session');
 
-    return { errorMessage: null, data };
+    return { error: null, data };
   } catch (error) {
-    return { errorMessage: getErrorMessage(error) };
+    return { error: getErrorMessage(error), data: null };
   }
 }
 
@@ -81,20 +90,20 @@ export const signInWithSocialAction = async (provider: Provider) => {
 
     if (error) throw error;
 
-    return { errorMessage: null, url: data.url };
+    return { error: null, url: data.url };
   } catch (error) {
-    return { errorMessage: getErrorMessage(error) };
+    return { error: getErrorMessage(error) };
   }
 };
 
 export const signOutAction = async () => {
   try {
-    const auth = await getSupabaseAuth();
+    const auth = await getAuth();
     const { error } = await auth.signOut();
     if (error) throw error;
 
-    return { errorMessage: null };
+    return { error: null };
   } catch (error) {
-    return { errorMessage: getErrorMessage(error) };
+    return { error: getErrorMessage(error) };
   }
 };
